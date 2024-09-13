@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Middleware\MareProjectPermissionMiddleware;
+use App\Http\Middleware\ProjectPermissionMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -14,7 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
-            'mare_project_permission' => MareProjectPermissionMiddleware::class
+            'project_permission' => ProjectPermissionMiddleware::class
         ]);
         $middleware->append([
             \Illuminate\Session\Middleware\StartSession::class,

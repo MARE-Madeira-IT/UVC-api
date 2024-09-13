@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\ProjectResource;
+
+use App\Models\Invite;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class FetchSelfProjectsInvokable extends Controller
+class FetchProjectInvitesInvokable extends Controller
 {
     /**
      * Handle the incoming request.
@@ -17,11 +18,6 @@ class FetchSelfProjectsInvokable extends Controller
      */
     public function __invoke(Request $request)
     {
-
-        if ($user = Auth::user()) {
-
-            return ProjectResource::collection($user->projects()->wherePivot('active', true)->get());
-        } else
-            return ["data" => []];
+        return Invite::where('user_id', Auth::id())->where('status', 0)->with('project')->get();
     }
 }

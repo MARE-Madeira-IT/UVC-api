@@ -17,6 +17,7 @@ class User extends Authenticatable implements JWTSubject
     use FiltersRecords;
     use HasRoles;
 
+    protected $table = 'wave.users';
     protected $connection = 'mysql_wave';
 
     /**
@@ -76,7 +77,8 @@ class User extends Authenticatable implements JWTSubject
 
     public function projects()
     {
-        return $this->belongsToMany(MareProject::class, 'wave_mare.mare_project_has_users', 'user_id', 'project_id');
+        return $this->belongsToMany(Project::class, 'project_has_users', 'user_id', 'project_id')
+            ->using(ProjectHasUser::class);
     }
 
     //user has many UserHasDivingSpot with user_id as key

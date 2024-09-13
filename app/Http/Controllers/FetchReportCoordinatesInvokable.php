@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\ProjectResource;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
-class FetchSelfProjectsInvokable extends Controller
+use App\Models\Report;
+use Illuminate\Http\Request;
+
+class FetchReportCoordinatesInvokable extends Controller
 {
     /**
      * Handle the incoming request.
@@ -17,11 +17,6 @@ class FetchSelfProjectsInvokable extends Controller
      */
     public function __invoke(Request $request)
     {
-
-        if ($user = Auth::user()) {
-
-            return ProjectResource::collection($user->projects()->wherePivot('active', true)->get());
-        } else
-            return ["data" => []];
+        return Report::latest()->take(100)->get();
     }
 }

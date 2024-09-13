@@ -3,20 +3,20 @@
 namespace Database\Seeders;
 
 
-use App\Models\MareDensity;
-use App\Models\MareDepth;
-use App\Models\MareFunction;
-use App\Models\MareIndicator;
-use App\Models\MareLocality;
-use App\Models\MarePermission;
-use App\Models\MareProject;
-use App\Models\MareProjectHasUser;
-use App\Models\MareReport;
-use App\Models\MareSite;
-use App\Models\MareSizeCategory;
-use App\Models\MareSubstrate;
-use App\Models\MareTaxa;
-use App\Models\MareTaxaCategory;
+use App\Models\Density;
+use App\Models\Depth;
+use App\Models\ProjectFunction;
+use App\Models\Indicator;
+use App\Models\Locality;
+use App\Models\Permission;
+use App\Models\Project;
+use App\Models\ProjectHasUser;
+use App\Models\Report;
+use App\Models\Site;
+use App\Models\SizeCategory;
+use App\Models\Substrate;
+use App\Models\Taxa;
+use App\Models\TaxaCategory;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -29,7 +29,7 @@ class MareSeeder extends Seeder
      */
     public function run()
     {
-        $project = MareProject::create([
+        $project = Project::create([
             "name" => "MARE-Madeira",
             "description" => "Lorem ipsum dolor sit amet consectetur adipiscing elit Ut et massa mi. Aliquam in hendrerit urna. Pellentesque sit amet sapien.",
             "community_size" => 10,
@@ -44,16 +44,20 @@ class MareSeeder extends Seeder
         ];
 
         foreach ($permissions as $name) {
-            MarePermission::create(["name" => $name]);
+            Permission::create(["name" => $name]);
         }
 
-        $mareProjectHasUser = MareProjectHasUser::create([
+
+        $mareProjectHasUser = ProjectHasUser::create([
             "project_id" => $project->id,
             "user_id" => User::where('note', 'admin account')->first()->id,
             'active' => 1
         ]);
+        logger('$mareProjectHasUser->id');
+        logger($mareProjectHasUser->id);
+        logger(json_encode($mareProjectHasUser));
 
-        $mareProjectHasUser->permissions()->attach(MarePermission::all()->pluck('id')->toArray());
+        $mareProjectHasUser->permissions()->attach(Permission::all()->pluck('id')->toArray());
 
 
         $indicators = [
@@ -68,7 +72,7 @@ class MareSeeder extends Seeder
         ];
 
         foreach ($indicators as $indicator) {
-            MareIndicator::create($indicator);
+            Indicator::create($indicator);
         }
 
         // $trophicGuilds = [
@@ -85,7 +89,7 @@ class MareSeeder extends Seeder
         // ];
 
         // foreach ($trophicGuilds as $trophicGuild) {
-        //     MareTrophicGuild::create($trophicGuild);
+        //     TrophicGuild::create($trophicGuild);
         // }
 
         ## macroinv, fish, litter ....
@@ -1203,15 +1207,15 @@ class MareSeeder extends Seeder
         ];
 
         foreach ($categories as $category) {
-            $nCategory = MareTaxaCategory::create([
+            $nCategory = TaxaCategory::create([
                 'name' => $category[0]
             ]);
 
             foreach ($category[1] as $taxa) {
-                $taxaAlreadyExists = MareTaxa::where('name', $taxa['name'])->first();
+                $taxaAlreadyExists = Taxa::where('name', $taxa['name'])->first();
 
                 if (!$taxaAlreadyExists)
-                    MareTaxa::create([
+                    Taxa::create([
                         'name' => $taxa["name"],
                         'genus' => $taxa["genus"] ?? null,
                         'species' => $taxa["species"] ?? null,
@@ -1236,7 +1240,7 @@ class MareSeeder extends Seeder
         ];
 
         foreach ($sizeCategories as $sizeCategory) {
-            MareSizeCategory::create($sizeCategory);
+            SizeCategory::create($sizeCategory);
         }
 
         $densities = [
@@ -1246,7 +1250,7 @@ class MareSeeder extends Seeder
         ];
 
         foreach ($densities as $density) {
-            MareDensity::create($density);
+            Density::create($density);
         }
 
         $teamFunctions = [
@@ -1259,7 +1263,7 @@ class MareSeeder extends Seeder
         ];
 
         foreach ($teamFunctions as $teamFunction) {
-            MareFunction::create($teamFunction);
+            ProjectFunction::create($teamFunction);
         }
 
         $depths = [
@@ -1269,7 +1273,7 @@ class MareSeeder extends Seeder
         ];
 
         foreach ($depths as $depth) {
-            MareDepth::create($depth);
+            Depth::create($depth);
         }
 
 
@@ -1356,14 +1360,14 @@ class MareSeeder extends Seeder
         ];
 
         foreach ($localities as $locality) {
-            $createdLocality = MareLocality::create([
+            $createdLocality = Locality::create([
                 "name" => $locality["name"],
                 "code" => $locality["code"],
                 "project_id" => $locality["project_id"],
             ]);
 
             foreach ($locality["sites"] as $site) {
-                MareSite::create([
+                Site::create([
                     "name" => $site["name"],
                     "code" => $site["code"],
                     'locality_id' => $createdLocality->id
@@ -1385,10 +1389,10 @@ class MareSeeder extends Seeder
         ];
 
         foreach ($substrates as $substrate) {
-            MareSubstrate::create($substrate);
+            Substrate::create($substrate);
         }
 
-        $report = MareReport::create([
+        $report = Report::create([
             "code" => "SE_QLW_Time0_D2_R0",
             "date" => "2017-05-17",
             "transect" => 0,
@@ -1403,11 +1407,11 @@ class MareSeeder extends Seeder
             "site_area" => null,
             "distance" => null,
             "dom_substrate" => "Blocks",
-            "depth_id" => MareDepth::where("name", '9-11 m')->first()->id,
-            "site_id" => MareSite::where("name", "Quinta do Lorde W")->first()->id,
+            "depth_id" => Depth::where("name", '9-11 m')->first()->id,
+            "site_id" => Site::where("name", "Quinta do Lorde W")->first()->id,
             "project_id" => $project->id,
         ]);
 
-        $report->functions()->attach(MareFunction::all()->pluck('id'));
+        $report->functions()->attach(ProjectFunction::all()->pluck('id'));
     }
 }

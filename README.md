@@ -261,7 +261,7 @@ In case new configuration files have not been found update / create the supervis
 ```sh
 $ php artisan serve
 $ php artisan migrate:fresh --seed
-$ php artisan db:seed -MareSeeder #Needs to be after creating an admin
+$ php artisan db:seed -Seeder #Needs to be after creating an admin
 $ php artisan schedule:run **in case you implemented a queue worker**
 ```
 
