@@ -7,6 +7,7 @@ use App\Models\Density;
 use App\Models\Depth;
 use App\Models\ProjectFunction;
 use App\Models\Indicator;
+use App\Models\IndicatorHasValue;
 use App\Models\Locality;
 use App\Models\Permission;
 use App\Models\Project;
@@ -61,18 +62,120 @@ class MareSeeder extends Seeder
 
 
         $indicators = [
-            ['name' => 'trophic guild', 'project_id' => $project->id],
-            ['name' => 'trophic guild 1', 'project_id' => $project->id],
-            ['name' => 'trophic guild 2', 'project_id' => $project->id],
-            ['name' => 'trophic guild 3', 'project_id' => $project->id],
-            ['name' => 'group', 'project_id' => $project->id],
-            ['name' => 'a', 'project_id' => $project->id],
-            ['name' => 'b', 'project_id' => $project->id],
-            ['name' => 'a-b source', 'project_id' => $project->id],
+            [
+                'name' => 'trophic guild',
+                'project_id' => $project->id,
+                'type' => 'select',
+                'values' => [
+                    "Omnivore",
+                    "Macro-carnivore",
+                    "Piscivore",
+                    "Invertivore",
+                    "Herbivore",
+                    "Grazer",
+                    "Detritivore",
+                    "Planktivore",
+                    "Scavenger",
+                    "Zooplanktivore",
+                    "ML",
+
+                ]
+            ],
+            [
+                'name' => 'trophic guild 1',
+                'project_id' => $project->id,
+                'type' => 'select',
+                'values' => [
+                    "inv",
+                    "grazer",
+                    "omnivorous detritivores",
+                    "he",
+                    "cnidaris or sponges",
+                    "opportunistic feeder, exhibiting both carnivory and scavenging",
+                    "omnivorous scavenger",
+                    "detritivorous",
+                    "Predator/Scavenger",
+                    "filter feeders",
+                    "Mobile carnivorous species "
+                ]
+            ],
+            [
+                'name' => 'trophic guild 2',
+                'project_id' => $project->id,
+                'type' => 'select',
+                'values' => [
+                    "Predator-omnivorous, polytrophic",
+                    "Grazer-mostly herviborous",
+                    "Predator-carnivorous",
+                    "Detritivore",
+                    "Grazer - mostly herviborous",
+                    "Grazer-carnivorous",
+                    "Polytrophic-planktivore and symbiosis with zooxanthellae",
+                    "Grazer-herviborous",
+                    "Filter feeder-planktivore ",
+                    "Detritivore-herbivorous",
+
+                ]
+            ],
+            [
+                'name' => 'trophic guild 3',
+                'project_id' => $project->id,
+                'type' => 'select',
+                'values' => [
+                    "Invertivore",
+                    "Grazer",
+                    "Detritivore",
+                    "Herbivore",
+                    "Scavenger",
+                    "Zooplanktivore",
+                    "Planktivore",
+                    "Macro-carnivore",
+                    "Omnivore",
+                ]
+            ],
+            ['name' => 'group', 'project_id' => $project->id, 'type' => 'select', 'values' => [
+                'fish',
+                'cnidaria',
+                'echinodermata',
+                'gastropoda',
+                'Crustacea',
+                'polychaeta',
+                'Mollusca',
+                'bivalvia',
+                'ML',
+            ]],
+            [
+                'name' => 'a',
+                'project_id' => $project->id,
+                'type' => 'number'
+            ],
+            [
+                'name' => 'b',
+                'project_id' => $project->id,
+                'type' => 'number'
+            ],
+            [
+                'name' => 'a-b source',
+                'project_id' => $project->id,
+                'type' => 'text'
+            ],
         ];
 
         foreach ($indicators as $indicator) {
-            Indicator::create($indicator);
+            $indicatorEl = Indicator::create([
+                'name' => $indicator["name"],
+                'project_id' => $indicator["project_id"],
+                'type' => $indicator["type"],
+            ]);
+
+            if (array_key_exists("values", $indicator)) {
+                foreach ($indicator["values"] as $value) {
+                    IndicatorHasValue::create([
+                        "name" => $value,
+                        "indicator_id" => $indicatorEl->id
+                    ]);
+                }
+            }
         }
 
         // $trophicGuilds = [

@@ -8,6 +8,7 @@ use App\Http\QueryFilters\ProjectFilters;
 use App\Http\QueryFilters\UserFilters;
 use App\Http\Requests\ProjectRequest;
 use App\Http\Resources\ProjectResource;
+use App\Http\Resources\ProjectUserResource;
 use App\Http\Resources\UserResource;
 use App\Models\ProjectFunction;
 use App\Models\Permission;
@@ -132,7 +133,7 @@ class ProjectController extends Controller
         $filters = UserFilters::hydrate($request->query());
         $userIds = User::filterBy($filters)->paginate(10)->pluck("id");
 
-        return UserResource::collection(ProjectHasUser::where('project_id', $request->project)
+        return ProjectUserResource::collection(ProjectHasUser::where('project_id', $request->project)
             ->whereIn('user_id', $userIds)->get());
     }
 
@@ -160,7 +161,7 @@ class ProjectController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'The user permissions have been updated',
-            'data' => new UserResource($projectHasUser),
+            'data' => new ProjectUserResource($projectHasUser),
         ], 201);
     }
 

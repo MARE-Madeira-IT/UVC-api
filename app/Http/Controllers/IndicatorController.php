@@ -7,6 +7,7 @@ use App\Http\QueryFilters\IndicatorFilters;
 use App\Http\Requests\IndicatorRequest;
 use App\Http\Resources\IndicatorResource;
 use App\Models\Indicator;
+use App\Models\IndicatorHasValue;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -40,6 +41,15 @@ class IndicatorController extends Controller
 
         $newEntry = Indicator::create($validator);
 
+        if (array_key_exists("values", $validator) && count($validator["values"]) > 0) {
+            foreach ($validator["values"] as $value) {
+                IndicatorHasValue::create([
+                    "name" => $value,
+                    "indicator_id" => $newEntry->id,
+                ]);
+            }
+        }
+
         DB::commit();
 
         return new IndicatorResource($newEntry);
@@ -71,9 +81,25 @@ class IndicatorController extends Controller
         $indicator->update($validator);
 
 
+        if (array_key_exists("values", $validator) && count($validator["values"]) > 0) {
+            IndicatorHasValue::whereNotIn('name', $validator["values"])->where('indicator_id', $indicator->id)->delete();
+
+            $indicatorValues = $indicator->indicatorValues->pluck("name")->toArray();
+            foreach ($validator["values"] as $value) {
+                if (!in_array($value, $indicatorValues)) {
+                    $indicator->indicatorValues()->create([
+                        "name" => $value,
+                    ]);
+                }
+            }
+        }
+
+        logger(IndicatorHasValue::where('indicator_id', $indicator->id)->get()->pluck("name"));
+
+
         DB::commit();
 
-        return new IndicatorResource($indicator);
+        return new IndicatorResource($indicator->fresh());
     }
 
     /**
@@ -84,6 +110,7 @@ class IndicatorController extends Controller
      */
     public function destroy(Indicator $indicator)
     {
+        $indicator->indicatorValues()->delete();
         $indicator->delete();
 
         return response()->json(null, 204);

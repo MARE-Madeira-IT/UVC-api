@@ -15,9 +15,12 @@ class CreateIndicatorsTable extends Migration
     {
         Schema::create('indicators', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name')->unique();
+            $table->string('name');
+            $table->enum('type', ["number", "text", "select"]);
             $table->integer('project_id')->unsigned();
             $table->timestamps();
+
+            $table->unique(["name", "project_id"]);
 
             $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
         });

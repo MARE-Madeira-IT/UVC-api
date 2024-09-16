@@ -23,7 +23,6 @@ class UserResource extends JsonResource
             'photo' => $this->photo,
             'is_verified' => $this->is_verified,
             'occupation' => $this->occupation,
-            'roles' =>  $this->when($this->roles->count() !== 0, $this->roles),
             'userable' => [
                 'type_name' => $this->userable_type,
                 'certificates' => $this->certificates,

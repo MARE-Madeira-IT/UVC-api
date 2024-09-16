@@ -32,6 +32,8 @@ class IndicatorRequest extends FormRequest
         return [
             'name' => 'required|string',
             'project_id' => 'required|integer|exists:projects,id',
+            'type' => 'required|string',
+            'values' => 'sometimes|array',
         ];
     }
 

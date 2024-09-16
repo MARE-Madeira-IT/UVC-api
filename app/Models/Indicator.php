@@ -11,7 +11,9 @@ class Indicator extends Model
 
 
     protected $fillable = [
-        "name", "project_id"
+        "name",
+        "type",
+        "project_id"
     ];
 
     public function taxas()
@@ -22,5 +24,10 @@ class Indicator extends Model
     public function project()
     {
         return $this->belongsTo(Project::class);
+    }
+
+    public function indicatorValues()
+    {
+        return $this->hasMany(IndicatorHasValue::class);
     }
 }
