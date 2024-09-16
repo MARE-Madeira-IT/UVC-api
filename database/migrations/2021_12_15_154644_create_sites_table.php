@@ -18,6 +18,8 @@ class CreateSitesTable extends Migration
             $table->integer('locality_id')->unsigned();
             $table->string('name');
             $table->string('code');
+            $table->decimal('latitude', 10, 7)->nullable();
+            $table->decimal('longitude', 10, 7)->nullable();
             $table->timestamps();
 
             $table->foreign('locality_id')->references('id')->on('localities')->onDelete('cascade');

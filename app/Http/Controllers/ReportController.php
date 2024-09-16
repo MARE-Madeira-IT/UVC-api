@@ -9,6 +9,7 @@ use App\Http\Requests\ReportRequest;
 use App\Http\Resources\ReportResource;
 use App\Models\Report;
 use App\Models\ReportHasFunction;
+use App\Models\Site;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 
@@ -38,17 +39,16 @@ class ReportController extends Controller
     public function store(ReportRequest $request)
     {
         $validator = $request->validated();
-        #return $validator;
         $newEntry = Report::create([
             "project_id" => $validator["project_id"],
-
+            "time" => $validator["time"],
             "code" => $validator["code"],
             "date" => $validator["date"],
             "transect" => $validator["transect"],
             "daily_dive" => $validator["daily_dive"],
             "replica" => $validator["replica"],
-            "latitude" => $validator["latitude"],
-            "longitude" => $validator["longitude"],
+            "latitude" => Site::findOrFail($validator["site_id"])->latitude,
+            "longitude" => Site::findOrFail($validator["site_id"])->longitude,
             "heading" => Arr::get($validator, "heading"),
             "heading_direction" =>  Arr::get($validator, "heading_direction"),
             "site_area" =>  Arr::get($validator, "site_area"),

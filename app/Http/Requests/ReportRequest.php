@@ -41,8 +41,6 @@ class ReportRequest extends FormRequest
             'replica' => 'required|integer',
             'time' => 'required|integer',
             'daily_dive' => 'required|integer',
-            'latitude' => ['required', 'regex:/^(\+|-)?(?:90(?:(?:\.0{1,6})?)|(?:[0-9]|[1-8][0-9])(?:(?:\.[0-9]{1,20})?))$/'],
-            'longitude' => ['required', 'regex:/^(\+|-)?(?:180(?:(?:\.0{1,6})?)|(?:[0-9]|[1-9][0-9]|1[0-7][0-9])(?:(?:\.[0-9]{1,20})?))$/'],
             'heading' => 'nullable|integer',
             'heading_direction' => 'nullable|string',
             'dom_substrate' => 'nullable|string',
@@ -50,7 +48,7 @@ class ReportRequest extends FormRequest
             'distance' => 'nullable|string',
             'functions' => 'required|array',
             'functions.*.value' => 'required|string',
-            'functions.*.function_id' => 'required|integer|exists:functions,id',
+            'functions.*.function_id' => 'required|integer|exists:project_functions,id',
             'surveyed_area' => 'required|integer',
         ];
     }

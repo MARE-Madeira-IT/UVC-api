@@ -34,8 +34,11 @@ class LocalityRequest extends FormRequest
             'code' => 'required|string',
             'project_id' => 'required|integer|exists:projects,id',
             'sites' => 'array',
+            'sites.*.id' => 'required|integer',
             'sites.*.name' => 'required|string',
             'sites.*.code' => 'required|string',
+            'sites.*.latitude' => ['required', 'regex:/^(\+|-)?(?:90(?:(?:\.0{1,6})?)|(?:[0-9]|[1-8][0-9])(?:(?:\.[0-9]{1,20})?))$/'],
+            'sites.*.longitude' => ['required', 'regex:/^(\+|-)?(?:180(?:(?:\.0{1,6})?)|(?:[0-9]|[1-9][0-9]|1[0-7][0-9])(?:(?:\.[0-9]{1,20})?))$/'],
             'removeIDs' => 'array'
         ];
     }

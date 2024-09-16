@@ -80,19 +80,13 @@ class LocalityController extends Controller
         $locality->update($validator);
 
         foreach ($validator["sites"] as $key => $site) {
-            if (array_key_exists("id", $site)) {
-                $editSite = Site::find($site["id"]);
-                $editSite->update([
-                    "name" => $site["name"],
-                    "code" => $site["code"]
-                ]);
-            } else {
-                Site::create([
-                    "name" => $site["name"],
-                    "code" => $site["code"],
-                    "locality_id" => $locality->id,
-                ]);
-            }
+            Site::updateOrCreate(["id" => $site["id"] ?? null], [
+                "name" => $site["name"],
+                "code" => $site["code"],
+                "latitude" => $site["latitude"],
+                "longitude" => $site["longitude"],
+                "locality_id" => $locality->id,
+            ]);
         }
         if (array_key_exists("removeIDs", $validator)) {
             $removeSites = Site::whereIn('id', $validator["removeIDs"])->get();
