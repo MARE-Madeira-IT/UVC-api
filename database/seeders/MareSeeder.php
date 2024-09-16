@@ -54,9 +54,6 @@ class MareSeeder extends Seeder
             "user_id" => User::where('note', 'admin account')->first()->id,
             'active' => 1
         ]);
-        logger('$mareProjectHasUser->id');
-        logger($mareProjectHasUser->id);
-        logger(json_encode($mareProjectHasUser));
 
         $mareProjectHasUser->permissions()->attach(Permission::all()->pluck('id')->toArray());
 

@@ -94,9 +94,6 @@ class IndicatorController extends Controller
             }
         }
 
-        logger(IndicatorHasValue::where('indicator_id', $indicator->id)->get()->pluck("name"));
-
-
         DB::commit();
 
         return new IndicatorResource($indicator->fresh());
