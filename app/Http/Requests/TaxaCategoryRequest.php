@@ -29,7 +29,6 @@ class TaxaCategoryRequest extends FormRequest
      */
     public function rules()
     {
-        logger($this->route()->id);
         return [
             'name' => [
                 'required',
