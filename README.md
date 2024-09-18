@@ -2,6 +2,9 @@
 
 Underwater Survey is a platform for storing transect's data
 
+# Database
+https://lucid.app/lucidchart/b879a5f8-df4e-42bb-a09a-247fe0d4eae6/edit?invitationId=inv_840e7aad-9284-4987-98d3-f3353994fc40
+
 # Setup
 
 ## !IMPORTANT!

@@ -3,12 +3,12 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use JWTAuth;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
-class LocalityRequest extends FormRequest
+class TaxaCategoryRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -29,17 +29,16 @@ class LocalityRequest extends FormRequest
      */
     public function rules()
     {
+        logger($this->route()->id);
         return [
-            'name' => 'required|string',
-            'code' => 'required|string',
+            'name' => [
+                'required',
+                'string',
+                Rule::unique('taxa_categories', 'name')->ignore($this->id)->where(function ($query) {
+                    $query->where('project_id', $this->project_id);
+                })
+            ],
             'project_id' => 'required|integer|exists:projects,id',
-            'sites' => 'array',
-            'sites.*.id' => 'sometimes|integer',
-            'sites.*.name' => 'required|string',
-            'sites.*.code' => 'required|string',
-            'sites.*.latitude' => ['required', 'regex:/^(\+|-)?(?:90(?:(?:\.0{1,6})?)|(?:[0-9]|[1-8][0-9])(?:(?:\.[0-9]{1,20})?))$/'],
-            'sites.*.longitude' => ['required', 'regex:/^(\+|-)?(?:180(?:(?:\.0{1,6})?)|(?:[0-9]|[1-9][0-9]|1[0-7][0-9])(?:(?:\.[0-9]{1,20})?))$/'],
-            'removeIDs' => 'array'
         ];
     }
 

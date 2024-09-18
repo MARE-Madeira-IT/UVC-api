@@ -1308,7 +1308,8 @@ class MareSeeder extends Seeder
 
         foreach ($categories as $category) {
             $nCategory = TaxaCategory::create([
-                'name' => $category[0]
+                'name' => $category[0],
+                'project_id' => $project->id,
             ]);
 
             foreach ($category[1] as $taxa) {

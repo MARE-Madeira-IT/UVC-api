@@ -44,6 +44,11 @@ class Project extends Model
         return $this->hasMany(Taxa::class, 'project_id');
     }
 
+    public function taxaCategories()
+    {
+        return $this->hasMany(TaxaCategory::class, 'project_id');
+    }
+
     public function indicators()
     {
         return $this->hasMany(Indicator::class, 'project_id');

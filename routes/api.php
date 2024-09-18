@@ -79,6 +79,11 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::delete('projects/{project}', [ProjectController::class, "destroy"])->middleware('project_permission:delete');
 
     Route::get('taxa_categories', [TaxaCategoryController::class, "index"])->middleware('project_permission:show');
+    Route::post('taxa_categories', [TaxaCategoryController::class, "store"])->middleware('project_permission:create');
+    Route::get('taxa_categories/{taxaCategory}', [TaxaCategoryController::class, "show"])->middleware('project_permission:show');
+    Route::put('taxa_categories/{taxaCategory}', [TaxaCategoryController::class, "update"])->middleware('project_permission:edit');
+    Route::delete('taxa_categories/{taxaCategory}', [TaxaCategoryController::class, "destroy"])->middleware('project_permission:delete');
+
 
     Route::get('benthics', [BenthicController::class, "index"])->middleware('project_permission:show');
     Route::post('benthics', [BenthicController::class, "store"])->middleware('project_permission:create');

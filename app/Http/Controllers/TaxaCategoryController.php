@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-
+use App\Http\QueryFilters\TaxaCategoryFilters;
+use App\Http\Requests\TaxaCategoryRequest;
 use App\Http\Resources\TaxaCategoryResource;
 use App\Models\TaxaCategory;
 use Illuminate\Http\Request;
@@ -15,9 +16,9 @@ class TaxaCategoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(TaxaCategoryFilters $filters)
     {
-        return TaxaCategoryResource::collection(TaxaCategory::paginate(10));
+        return TaxaCategoryResource::collection(TaxaCategory::filterBy($filters)->paginate(10));
     }
 
     public function selector()
@@ -31,31 +32,23 @@ class TaxaCategoryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(TaxaCategoryRequest $request)
     {
-        //
-    }
+        $validator = $request->validated();
 
+        $newEntry = TaxaCategory::create($validator);
+
+        return new TaxaCategoryResource($newEntry);
+    }
     /**
      * Display the specified resource.
      *
      * @param  \App\TaxaCategory  $mareTaxaCategory
      * @return \Illuminate\Http\Response
      */
-    public function show(TaxaCategory $mareTaxaCategory)
+    public function show(TaxaCategory $taxaCategory)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\TaxaCategory  $mareTaxaCategory
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(TaxaCategory $mareTaxaCategory)
-    {
-        //
+        return new TaxaCategoryResource($taxaCategory);
     }
 
     /**
@@ -65,9 +58,13 @@ class TaxaCategoryController extends Controller
      * @param  \App\TaxaCategory  $mareTaxaCategory
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, TaxaCategory $mareTaxaCategory)
+    public function update(TaxaCategoryRequest $request, TaxaCategory $taxaCategory)
     {
-        //
+        $validator = $request->validated();
+
+        $taxaCategory->update($validator);
+
+        return new TaxaCategoryResource($taxaCategory);
     }
 
     /**
@@ -76,8 +73,10 @@ class TaxaCategoryController extends Controller
      * @param  \App\TaxaCategory  $mareTaxaCategory
      * @return \Illuminate\Http\Response
      */
-    public function destroy(TaxaCategory $mareTaxaCategory)
+    public function destroy(TaxaCategory $taxaCategory)
     {
-        //
+        $taxaCategory->delete();
+
+        return response()->json(null, 204);
     }
 }

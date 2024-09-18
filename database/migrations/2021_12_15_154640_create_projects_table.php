@@ -22,7 +22,7 @@ class CreateProjectsTable extends Migration
             $table->string('start_period')->nullable();
             $table->string('end_period')->nullable();
             $table->string('stage')->default("Ongoing");
-            $table->integer('community_size');
+            $table->string('community_size');
 
 
 

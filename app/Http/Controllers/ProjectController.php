@@ -50,19 +50,6 @@ class ProjectController extends Controller
 
         $mareProjectHasUser->permissions()->attach(Permission::all()->pluck('id')->toArray());
 
-        $teamFunctions = [
-            ['name' => 'fish', 'project_id' => $project->id],
-            ['name' => 'cryptic', 'project_id' => $project->id],
-            ['name' => 'macroinv', 'project_id' => $project->id],
-            ['name' => 'dom_urchin', 'project_id' => $project->id],
-            ['name' => 'benthic_t', 'project_id' => $project->id],
-            ['name' => 'photo_q', 'project_id' => $project->id],
-        ];
-
-        foreach ($teamFunctions as $teamFunction) {
-            ProjectFunction::create($teamFunction);
-        }
-
         return new ProjectResource($project);
     }
 
