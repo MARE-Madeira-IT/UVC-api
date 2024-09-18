@@ -3,12 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-
-use App\Models\Invite;
+use App\Http\Resources\SurveyProgramResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class FetchProjectInvitesInvokable extends Controller
+class FetchSelfSurveyProgramsInvokable extends Controller
 {
     /**
      * Handle the incoming request.
@@ -18,6 +17,11 @@ class FetchProjectInvitesInvokable extends Controller
      */
     public function __invoke(Request $request)
     {
-        return Invite::where('user_id', Auth::id())->where('status', 0)->with('project')->get();
+
+        if ($user = Auth::user()) {
+
+            return SurveyProgramResource::collection($user->surveyPrograms()->wherePivot('active', true)->get());
+        } else
+            return ["data" => []];
     }
 }

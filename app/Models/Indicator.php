@@ -13,7 +13,7 @@ class Indicator extends Model
     protected $fillable = [
         "name",
         "type",
-        "project_id"
+        "survey_program_id"
     ];
 
     public function taxas()
@@ -21,9 +21,9 @@ class Indicator extends Model
         return $this->belongsToMany(Taxa::class, 'taxa_has_indicators', 'indicator_id', 'taxa_id');
     }
 
-    public function project()
+    public function surveyProgram()
     {
-        return $this->belongsTo(Project::class);
+        return $this->belongsTo(SurveyProgram::class);
     }
 
     public function indicatorValues()

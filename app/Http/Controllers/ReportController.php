@@ -40,7 +40,7 @@ class ReportController extends Controller
     {
         $validator = $request->validated();
         $newEntry = Report::create([
-            "project_id" => $validator["project_id"],
+            "survey_program_id" => $validator["survey_program_id"],
             "time" => $validator["time"],
             "code" => $validator["code"],
             "date" => $validator["date"],

@@ -8,11 +8,11 @@ use Cerbero\QueryFilters\QueryFilters;
  * Filter records based on query parameters.
  *
  */
-class ProjectFunctionFilters extends QueryFilters
+class SurveyProgramFunctionFilters extends QueryFilters
 {
-    public function project($id)
+    public function survey_program($id)
     {
-        $this->query->where('project_id', $id);
+        $this->query->where('survey_program_id', $id);
     }
 
     public function search($string)

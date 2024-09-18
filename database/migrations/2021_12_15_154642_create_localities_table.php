@@ -17,10 +17,10 @@ class CreateLocalitiesTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('code');
-            $table->integer('project_id')->unsigned();
+            $table->integer('survey_program_id')->unsigned();
             $table->timestamps();
 
-            $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
+            $table->foreign('survey_program_id')->references('id')->on('survey_programs')->onDelete('cascade');
         });
     }
 

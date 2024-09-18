@@ -10,10 +10,10 @@ use Cerbero\QueryFilters\QueryFilters;
  */
 class MotileFilters extends QueryFilters
 {
-    public function project($id)
+    public function survey_program($id)
     {
         $this->query->whereHas('report', function ($query) use ($id) {
-            $query->where('project_id', $id);
+            $query->where('survey_program_id', $id);
         });
     }
 

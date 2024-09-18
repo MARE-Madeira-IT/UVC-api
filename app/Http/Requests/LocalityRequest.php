@@ -32,7 +32,7 @@ class LocalityRequest extends FormRequest
         return [
             'name' => 'required|string',
             'code' => 'required|string',
-            'project_id' => 'required|integer|exists:projects,id',
+            'survey_program_id' => 'required|integer|exists:survey_programs,id',
             'sites' => 'array',
             'sites.*.id' => 'sometimes|integer',
             'sites.*.name' => 'required|string',

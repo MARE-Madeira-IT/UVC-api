@@ -16,13 +16,13 @@ class CreateTaxaCategoriesTable extends Migration
         Schema::create('taxa_categories', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->integer('project_id')->unsigned();
+            $table->integer('survey_program_id')->unsigned();
             $table->timestamps();
 
-            $table->unique(["name", "project_id"]);
+            $table->unique(["name", "survey_program_id"]);
 
 
-            $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
+            $table->foreign('survey_program_id')->references('id')->on('survey_programs')->onDelete('cascade');
         });
     }
 

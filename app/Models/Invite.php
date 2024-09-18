@@ -8,7 +8,7 @@ class Invite extends Model
 {
 
     protected $fillable = [
-        "project_id",
+        "survey_program_id",
         "user_id",
         "status"
     ];
@@ -18,8 +18,8 @@ class Invite extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function project()
+    public function surveyProgram()
     {
-        return $this->belongsTo(Project::class, 'project_id');
+        return $this->belongsTo(SurveyProgram::class, 'survey_program_id');
     }
 }

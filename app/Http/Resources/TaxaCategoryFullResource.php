@@ -16,8 +16,8 @@ class TaxaCategoryFullResource extends JsonResource
     {
         $taxas = $this->taxas;
 
-        if ($request->project) {
-            $taxas = $this->taxas()->where('project_id', $request->project)->get();
+        if ($request->survey_program) {
+            $taxas = $this->taxas()->where('survey_program_id', $request->survey_program)->get();
         }
 
         return [

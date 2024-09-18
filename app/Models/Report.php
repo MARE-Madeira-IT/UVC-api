@@ -25,7 +25,7 @@ class Report extends Model
         "distance",
         "site_id",
         "depth_id",
-        "project_id",
+        "survey_program_id",
         "time",
         "surveyed_area",
     ];
@@ -46,7 +46,7 @@ class Report extends Model
 
     public function functions()
     {
-        return $this->belongsToMany(ProjectFunction::class, 'report_has_functions', 'report_id', 'function_id')->withPivot('user');
+        return $this->belongsToMany(SurveyProgramFunction::class, 'report_has_functions', 'report_id', 'function_id')->withPivot('user');
     }
 
     public function site()
@@ -54,9 +54,9 @@ class Report extends Model
         return $this->belongsTo(Site::class);
     }
 
-    public function project()
+    public function surveyProgram()
     {
-        return $this->belongsTo(Project::class);
+        return $this->belongsTo(SurveyProgram::class);
     }
 
     public function depth()

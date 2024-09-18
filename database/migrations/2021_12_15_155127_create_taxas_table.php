@@ -19,13 +19,13 @@ class CreateTaxasTable extends Migration
             $table->string('genus')->nullable();
             $table->string('species')->nullable();
             $table->string('phylum')->nullable();
-            $table->integer('project_id')->unsigned();
+            $table->integer('survey_program_id')->unsigned();
             $table->integer('category_id')->unsigned();
             $table->timestamps();
 
-            $table->unique(['project_id', 'name']);
+            $table->unique(['survey_program_id', 'name']);
 
-            $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
+            $table->foreign('survey_program_id')->references('id')->on('survey_programs')->onDelete('cascade');
             $table->foreign('category_id')->references('id')->on('taxa_categories')->onDelete('cascade');
         });
     }

@@ -5,11 +5,11 @@ namespace App\Models;
 use Cerbero\QueryFilters\FiltersRecords;
 use Illuminate\Database\Eloquent\Model;
 
-class Project extends Model
+class SurveyProgram extends Model
 {
     use FiltersRecords;
 
-    protected $table = 'wave_mare.projects';
+    protected $table = 'wave_mare.survey_programs';
     protected $connection = 'mysql';
 
     protected $fillable = [
@@ -26,46 +26,46 @@ class Project extends Model
 
     public function sites()
     {
-        return $this->hasManyThrough(Project::class, Locality::class, 'project_id');
+        return $this->hasManyThrough(SurveyProgram::class, Locality::class, 'survey_program_id');
     }
 
     public function localities()
     {
-        return $this->hasMany(Locality::class, 'project_id');
+        return $this->hasMany(Locality::class, 'survey_program_id');
     }
 
     public function users()
     {
-        return $this->belongsToMany(User::class, 'wave_mare.project_has_users', 'project_id', 'user_id');
+        return $this->belongsToMany(User::class, 'wave_mare.survey_program_has_users', 'survey_program_id', 'user_id');
     }
 
     public function taxas()
     {
-        return $this->hasMany(Taxa::class, 'project_id');
+        return $this->hasMany(Taxa::class, 'survey_program_id');
     }
 
     public function taxaCategories()
     {
-        return $this->hasMany(TaxaCategory::class, 'project_id');
+        return $this->hasMany(TaxaCategory::class, 'survey_program_id');
     }
 
     public function indicators()
     {
-        return $this->hasMany(Indicator::class, 'project_id');
+        return $this->hasMany(Indicator::class, 'survey_program_id');
     }
 
     public function depths()
     {
-        return $this->hasMany(Depth::class, 'project_id');
+        return $this->hasMany(Depth::class, 'survey_program_id');
     }
 
     public function functions()
     {
-        return $this->hasMany(ProjectFunction::class, 'project_id');
+        return $this->hasMany(SurveyProgramFunction::class, 'survey_program_id');
     }
 
     public function reports()
     {
-        return $this->hasMany(Report::class, 'project_id');
+        return $this->hasMany(Report::class, 'survey_program_id');
     }
 }

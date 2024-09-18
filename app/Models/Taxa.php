@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Taxa extends Model
 {
     use FiltersRecords;
-    protected $fillable = ['name', 'genus', 'species', 'phylum', 'project_id', 'category_id', 'photo_url', 'validated'];
+    protected $fillable = ['name', 'genus', 'species', 'phylum', 'survey_program_id', 'category_id', 'photo_url', 'validated'];
 
 
     public function category()
@@ -26,8 +26,8 @@ class Taxa extends Model
         return $this->hasMany(Benthic::class);
     }
 
-    public function project()
+    public function surveyProgram()
     {
-        return $this->belongsTo(Project::class);
+        return $this->belongsTo(SurveyProgram::class);
     }
 }

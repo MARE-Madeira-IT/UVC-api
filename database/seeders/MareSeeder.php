@@ -5,17 +5,17 @@ namespace Database\Seeders;
 
 use App\Models\Density;
 use App\Models\Depth;
-use App\Models\ProjectFunction;
+use App\Models\SurveyProgramFunction;
 use App\Models\Indicator;
 use App\Models\IndicatorHasValue;
 use App\Models\Locality;
 use App\Models\Permission;
-use App\Models\Project;
-use App\Models\ProjectHasUser;
+use App\Models\SurveyProgramHasUser;
 use App\Models\Report;
 use App\Models\Site;
 use App\Models\SizeCategory;
 use App\Models\Substrate;
+use App\Models\SurveyProgram;
 use App\Models\Taxa;
 use App\Models\TaxaCategory;
 use App\Models\User;
@@ -30,7 +30,7 @@ class MareSeeder extends Seeder
      */
     public function run()
     {
-        $project = Project::create([
+        $surveyProgram = SurveyProgram::create([
             "name" => "MARE-Madeira",
             "description" => "Lorem ipsum dolor sit amet consectetur adipiscing elit Ut et massa mi. Aliquam in hendrerit urna. Pellentesque sit amet sapien.",
             "community_size" => 10,
@@ -49,19 +49,19 @@ class MareSeeder extends Seeder
         }
 
 
-        $mareProjectHasUser = ProjectHasUser::create([
-            "project_id" => $project->id,
+        $mareSurveyProgramHasUser = SurveyProgramHasUser::create([
+            "survey_program_id" => $surveyProgram->id,
             "user_id" => User::where('note', 'admin account')->first()->id,
             'active' => 1
         ]);
 
-        $mareProjectHasUser->permissions()->attach(Permission::all()->pluck('id')->toArray());
+        $mareSurveyProgramHasUser->permissions()->attach(Permission::all()->pluck('id')->toArray());
 
 
         $indicators = [
             [
                 'name' => 'trophic guild',
-                'project_id' => $project->id,
+                'survey_program_id' => $surveyProgram->id,
                 'type' => 'select',
                 'values' => [
                     "Omnivore",
@@ -80,7 +80,7 @@ class MareSeeder extends Seeder
             ],
             [
                 'name' => 'trophic guild 1',
-                'project_id' => $project->id,
+                'survey_program_id' => $surveyProgram->id,
                 'type' => 'select',
                 'values' => [
                     "inv",
@@ -98,7 +98,7 @@ class MareSeeder extends Seeder
             ],
             [
                 'name' => 'trophic guild 2',
-                'project_id' => $project->id,
+                'survey_program_id' => $surveyProgram->id,
                 'type' => 'select',
                 'values' => [
                     "Predator-omnivorous, polytrophic",
@@ -116,7 +116,7 @@ class MareSeeder extends Seeder
             ],
             [
                 'name' => 'trophic guild 3',
-                'project_id' => $project->id,
+                'survey_program_id' => $surveyProgram->id,
                 'type' => 'select',
                 'values' => [
                     "Invertivore",
@@ -130,7 +130,7 @@ class MareSeeder extends Seeder
                     "Omnivore",
                 ]
             ],
-            ['name' => 'group', 'project_id' => $project->id, 'type' => 'select', 'values' => [
+            ['name' => 'group', 'survey_program_id' => $surveyProgram->id, 'type' => 'select', 'values' => [
                 'fish',
                 'cnidaria',
                 'echinodermata',
@@ -143,17 +143,17 @@ class MareSeeder extends Seeder
             ]],
             [
                 'name' => 'a',
-                'project_id' => $project->id,
+                'survey_program_id' => $surveyProgram->id,
                 'type' => 'number'
             ],
             [
                 'name' => 'b',
-                'project_id' => $project->id,
+                'survey_program_id' => $surveyProgram->id,
                 'type' => 'number'
             ],
             [
                 'name' => 'a-b source',
-                'project_id' => $project->id,
+                'survey_program_id' => $surveyProgram->id,
                 'type' => 'text'
             ],
         ];
@@ -161,7 +161,7 @@ class MareSeeder extends Seeder
         foreach ($indicators as $indicator) {
             $indicatorEl = Indicator::create([
                 'name' => $indicator["name"],
-                'project_id' => $indicator["project_id"],
+                'survey_program_id' => $indicator["survey_program_id"],
                 'type' => $indicator["type"],
             ]);
 
@@ -1309,7 +1309,7 @@ class MareSeeder extends Seeder
         foreach ($categories as $category) {
             $nCategory = TaxaCategory::create([
                 'name' => $category[0],
-                'project_id' => $project->id,
+                'survey_program_id' => $surveyProgram->id,
             ]);
 
             foreach ($category[1] as $taxa) {
@@ -1321,7 +1321,7 @@ class MareSeeder extends Seeder
                         'genus' => $taxa["genus"] ?? null,
                         'species' => $taxa["species"] ?? null,
                         'phylum' => array_key_exists("phylum", $taxa) ? $taxa["phylum"] : null,
-                        'project_id' => $project->id,
+                        'survey_program_id' => $surveyProgram->id,
                         'category_id' => $nCategory->id,
                         'validated' => true,
                     ]);
@@ -1355,22 +1355,22 @@ class MareSeeder extends Seeder
         }
 
         $teamFunctions = [
-            ['name' => 'fish', 'project_id' => $project->id],
-            ['name' => 'cryptic', 'project_id' => $project->id],
-            ['name' => 'macroinv', 'project_id' => $project->id],
-            ['name' => 'dom_urchin', 'project_id' => $project->id],
-            ['name' => 'benthic_t', 'project_id' => $project->id],
-            ['name' => 'photo_q', 'project_id' => $project->id],
+            ['name' => 'fish', 'survey_program_id' => $surveyProgram->id],
+            ['name' => 'cryptic', 'survey_program_id' => $surveyProgram->id],
+            ['name' => 'macroinv', 'survey_program_id' => $surveyProgram->id],
+            ['name' => 'dom_urchin', 'survey_program_id' => $surveyProgram->id],
+            ['name' => 'benthic_t', 'survey_program_id' => $surveyProgram->id],
+            ['name' => 'photo_q', 'survey_program_id' => $surveyProgram->id],
         ];
 
         foreach ($teamFunctions as $teamFunction) {
-            ProjectFunction::create($teamFunction);
+            SurveyProgramFunction::create($teamFunction);
         }
 
         $depths = [
-            ['name' => '4-6 m', 'project_id' => $project->id],
-            ['name' => '9-11 m', 'project_id' => $project->id],
-            ['name' => '19-21 m', 'project_id' => $project->id],
+            ['name' => '4-6 m', 'survey_program_id' => $surveyProgram->id],
+            ['name' => '9-11 m', 'survey_program_id' => $surveyProgram->id],
+            ['name' => '19-21 m', 'survey_program_id' => $surveyProgram->id],
         ];
 
         foreach ($depths as $depth) {
@@ -1382,7 +1382,7 @@ class MareSeeder extends Seeder
             [
                 'name' => 'South East',
                 'code' => 'SE',
-                'project_id' => $project->id,
+                'survey_program_id' => $surveyProgram->id,
                 'sites' => [
                     ['name' => 'Quinta do Lorde W', 'code' => 'QLW',],
                     ['name' => 'Quinta do Lorde E', 'code' => 'QLE',],
@@ -1391,7 +1391,7 @@ class MareSeeder extends Seeder
             [
                 'name' => 'South West',
                 'code' => 'SW',
-                'project_id' => $project->id,
+                'survey_program_id' => $surveyProgram->id,
                 'sites' => [
                     ['name' => 'Faja da Ovelha', 'code' => 'FO',],
                     ['name' => 'Faja da Ovelha E', 'code' => 'FO_E',],
@@ -1402,7 +1402,7 @@ class MareSeeder extends Seeder
             [
                 'name' => 'Caniço',
                 'code' => 'C',
-                'project_id' => $project->id,
+                'survey_program_id' => $surveyProgram->id,
                 'sites' => [
                     ['name' => 'Reis Magos', 'code' => 'RM',],
                     ['name' => 'Atalaia', 'code' => 'AT',],
@@ -1412,7 +1412,7 @@ class MareSeeder extends Seeder
             [
                 'name' => 'Funchal',
                 'code' => 'FX',
-                'project_id' => $project->id,
+                'survey_program_id' => $surveyProgram->id,
                 'sites' => [
                     ['name' => 'Carlton', 'code' => 'CA',],
                     ['name' => 'Carlton E', 'code' => 'CA_E',],
@@ -1425,7 +1425,7 @@ class MareSeeder extends Seeder
             [
                 'name' => 'Cabo Girão',
                 'code' => 'CG',
-                'project_id' => $project->id,
+                'survey_program_id' => $surveyProgram->id,
                 'sites' => [
                     ['name' => 'Câmara de Lobos', 'code' => 'CL',],
                     ['name' => 'Faja dos Padres', 'code' => 'FP',],
@@ -1435,7 +1435,7 @@ class MareSeeder extends Seeder
             [
                 'name' => 'Porto Santo A',
                 'code' => 'PXO_A',
-                'project_id' => $project->id,
+                'survey_program_id' => $surveyProgram->id,
                 'sites' => [
                     ['name' => 'LA01', 'code' => 'LA_01',],
                     ['name' => 'LA02', 'code' => 'LA_02',],
@@ -1448,7 +1448,7 @@ class MareSeeder extends Seeder
             [
                 'name' => 'Porto Santo C',
                 'code' => 'PXO_C',
-                'project_id' => $project->id,
+                'survey_program_id' => $surveyProgram->id,
                 'sites' => [
                     ['name' => 'LC01', 'code' => 'LC_01',],
                     ['name' => 'LC02', 'code' => 'LC_02',],
@@ -1464,7 +1464,7 @@ class MareSeeder extends Seeder
             $createdLocality = Locality::create([
                 "name" => $locality["name"],
                 "code" => $locality["code"],
-                "project_id" => $locality["project_id"],
+                "survey_program_id" => $locality["survey_program_id"],
             ]);
 
             foreach ($locality["sites"] as $site) {
@@ -1510,9 +1510,9 @@ class MareSeeder extends Seeder
             "dom_substrate" => "Blocks",
             "depth_id" => Depth::where("name", '9-11 m')->first()->id,
             "site_id" => Site::where("name", "Quinta do Lorde W")->first()->id,
-            "project_id" => $project->id,
+            "survey_program_id" => $surveyProgram->id,
         ]);
 
-        $report->functions()->attach(ProjectFunction::all()->pluck('id'));
+        $report->functions()->attach(SurveyProgramFunction::all()->pluck('id'));
     }
 }

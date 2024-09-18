@@ -35,10 +35,10 @@ class TaxaCategoryRequest extends FormRequest
                 'required',
                 'string',
                 Rule::unique('taxa_categories', 'name')->ignore($this->id)->where(function ($query) {
-                    $query->where('project_id', $this->project_id);
+                    $query->where('survey_program_id', $this->survey_program_id);
                 })
             ],
-            'project_id' => 'required|integer|exists:projects,id',
+            'survey_program_id' => 'required|integer|exists:survey_programs,id',
         ];
     }
 

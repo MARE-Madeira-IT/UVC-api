@@ -5,11 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Invite;
 use App\Models\Permission;
-use App\Models\ProjectHasUser;
+use App\Models\SurveyProgramHasUser;
 use App\Models\User;
 use Illuminate\Http\Request;
 
-class InviteMemberToProjectInvokable extends Controller
+class InviteMemberToSurveyProgramInvokable extends Controller
 {
     /**
      * Handle the incoming request.
@@ -22,12 +22,12 @@ class InviteMemberToProjectInvokable extends Controller
         $user = User::where('email', $request->email)->first();
         if ($user) {
             Invite::create([
-                "project_id" => $request->project_id,
+                "survey_program_id" => $request->survey_program_id,
                 "user_id" => $user->id
             ]);
 
-            $projectHasUser = ProjectHasUser::create([
-                "project_id" => $request->project_id,
+            $surveyProgramHasUser = SurveyProgramHasUser::create([
+                "survey_program_id" => $request->survey_program_id,
                 "user_id" => $user->id
             ]);
 
@@ -41,11 +41,11 @@ class InviteMemberToProjectInvokable extends Controller
                 array_push($permissionsToAdd, Permission::where('name', 'delete')->first()->id);
             }
 
-            $projectHasUser->permissions()->attach($permissionsToAdd);
+            $surveyProgramHasUser->permissions()->attach($permissionsToAdd);
 
             return response()->json([
                 'success' => true,
-                'message' => 'The user has been invited to the project',
+                'message' => 'The user has been invited to the survey program',
             ], 201);
         } else {
             return response()->json([

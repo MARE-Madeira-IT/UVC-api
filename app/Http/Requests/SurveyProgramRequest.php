@@ -8,7 +8,7 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Support\Facades\Auth;
 
-class ProjectRequest extends FormRequest
+class SurveyProgramRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

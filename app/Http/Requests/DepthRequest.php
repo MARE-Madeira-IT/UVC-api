@@ -31,7 +31,7 @@ class DepthRequest extends FormRequest
     {
         return [
             'name' => 'required|string',
-            'project_id' => 'required|integer|exists:projects,id',
+            'survey_program_id' => 'required|integer|exists:survey_programs,id',
         ];
     }
 

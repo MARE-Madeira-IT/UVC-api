@@ -4,11 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Invite;
-use App\Models\ProjectHasUser;
+use App\Models\SurveyProgramHasUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class AcceptMemberToProjectInvokable extends Controller
+class AcceptMemberToSurveyProgramInvokable extends Controller
 {
     /**
      * Handle the incoming request.
@@ -22,14 +22,14 @@ class AcceptMemberToProjectInvokable extends Controller
         $invite->save();
 
         if ($request->status == 1) {
-            $mareProjectHasUser = ProjectHasUser::where('project_id', $invite->project_id)->where('user_id', $invite->user_id)->first();
-            if ($mareProjectHasUser) {
-                $mareProjectHasUser->update([
+            $mareSurveyProgramHasUser = SurveyProgramHasUser::where('survey_program_id', $invite->survey_program_id)->where('user_id', $invite->user_id)->first();
+            if ($mareSurveyProgramHasUser) {
+                $mareSurveyProgramHasUser->update([
                     'active' => true
                 ]);
             }
         }
 
-        return Invite::where('user_id', Auth::id())->where('status', 0)->with('project')->get();
+        return Invite::where('user_id', Auth::id())->where('status', 0)->with('surveyProgram')->get();
     }
 }

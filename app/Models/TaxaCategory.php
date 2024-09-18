@@ -9,15 +9,15 @@ class TaxaCategory extends Model
 {
     use FiltersRecords;
 
-    protected $fillable = ['name', 'project_id'];
+    protected $fillable = ['name', 'survey_program_id'];
 
     public function taxas()
     {
         return $this->hasMany(Taxa::class, 'category_id');
     }
 
-    public function project()
+    public function surveyProgram()
     {
-        return $this->belongsTo(Project::class);
+        return $this->belongsTo(SurveyProgram::class);
     }
 }

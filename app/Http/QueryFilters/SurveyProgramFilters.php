@@ -8,7 +8,7 @@ use Cerbero\QueryFilters\QueryFilters;
  * Filter records based on query parameters.
  *
  */
-class ProjectFilters extends QueryFilters
+class SurveyProgramFilters extends QueryFilters
 {
     public function name($string)
     {

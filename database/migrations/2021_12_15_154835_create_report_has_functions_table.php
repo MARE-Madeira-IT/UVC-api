@@ -20,7 +20,7 @@ class CreateReportHasFunctionsTable extends Migration
             $table->string('user')->nullable();
             $table->timestamps();
 
-            $table->foreign('function_id')->references('id')->on('project_functions')->onDelete('cascade');
+            $table->foreign('function_id')->references('id')->on('survey_program_functions')->onDelete('cascade');
             $table->foreign('report_id')->references('id')->on('reports')->onDelete('cascade');
         });
     }

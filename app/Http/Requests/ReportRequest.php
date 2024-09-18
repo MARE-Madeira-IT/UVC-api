@@ -34,7 +34,7 @@ class ReportRequest extends FormRequest
         return [
             'site_id' => 'required|exists:sites,id',
             'depth_id' => 'integer|exists:depths,id',
-            'project_id' => 'integer|exists:projects,id',
+            'survey_program_id' => 'integer|exists:survey_programs,id',
             'code' => 'required|string',
             'date' => 'required|date',
             'transect' => 'required|integer',
@@ -48,7 +48,7 @@ class ReportRequest extends FormRequest
             'distance' => 'nullable|string',
             'functions' => 'required|array',
             'functions.*.value' => 'required|string',
-            'functions.*.function_id' => 'required|integer|exists:project_functions,id',
+            'functions.*.function_id' => 'required|integer|exists:survey_program_functions,id',
             'surveyed_area' => 'required|integer',
         ];
     }

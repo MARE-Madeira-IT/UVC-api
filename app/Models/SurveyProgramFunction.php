@@ -5,13 +5,13 @@ namespace App\Models;
 use Cerbero\QueryFilters\FiltersRecords;
 use Illuminate\Database\Eloquent\Model;
 
-class ProjectFunction extends Model
+class SurveyProgramFunction extends Model
 {
     use FiltersRecords;
 
 
     protected $fillable = [
-        "name", "project_id"
+        "name", "survey_program_id"
     ];
 
     public function reports()
@@ -19,8 +19,8 @@ class ProjectFunction extends Model
         return $this->belongsToMany(Report::class, 'report_has_functions')->withPivot('user');
     }
 
-    public function project()
+    public function surveyProgram()
     {
-        return $this->belongsTo(Project::class);
+        return $this->belongsTo(SurveyProgram::class);
     }
 }

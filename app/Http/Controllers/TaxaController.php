@@ -49,7 +49,7 @@ class TaxaController extends Controller
             $indicators = $validator["indicators"];
 
             foreach ($indicators as $key => $value) {
-                $indicator = Indicator::where('name', $key)->where('project_id', $newEntry->project_id)->first();
+                $indicator = Indicator::where('name', $key)->where('survey_program_id', $newEntry->survey_program_id)->first();
                 $newEntry->indicators()->attach($indicator->id, ["name" => $value]);
             }
         }
@@ -106,7 +106,7 @@ class TaxaController extends Controller
         $taxa->indicators()->detach();
 
         foreach ($indicators as $key => $value) {
-            $indicator = Indicator::where('name', $key)->where('project_id', $taxa->project_id)->first();
+            $indicator = Indicator::where('name', $key)->where('survey_program_id', $taxa->survey_program_id)->first();
             $taxa->indicators()->attach($indicator->id, ["name" => $value]);
         }
 

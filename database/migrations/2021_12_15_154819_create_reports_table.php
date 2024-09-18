@@ -28,14 +28,14 @@ class CreateReportsTable extends Migration
             $table->string('dom_substrate')->nullable();
             $table->string('site_area')->nullable();
             $table->decimal('distance', 2, 1)->nullable();
-            $table->integer('project_id')->unsigned();
+            $table->integer('survey_program_id')->unsigned();
             $table->integer('site_id')->unsigned();
             $table->integer('depth_id')->unsigned();
             $table->integer('surveyed_area');
 
             $table->timestamps();
 
-            $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
+            $table->foreign('survey_program_id')->references('id')->on('survey_programs')->onDelete('cascade');
             $table->foreign('site_id')->references('id')->on('sites')->onDelete('cascade');
             $table->foreign('depth_id')->references('id')->on('depths')->onDelete('cascade');
         });

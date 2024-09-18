@@ -11,7 +11,7 @@ use Maatwebsite\Excel\Concerns\WithTitle;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class ProjectFunctionSheet implements FromCollection, WithTitle, WithColumnWidths, WithStyles, WithMapping, WithHeadings
+class SurveyProgramFunctionSheet implements FromCollection, WithTitle, WithColumnWidths, WithStyles, WithMapping, WithHeadings
 {
   private $functions;
 

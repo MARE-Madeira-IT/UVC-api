@@ -10,9 +10,9 @@ use Cerbero\QueryFilters\QueryFilters;
  */
 class BenthicsFilters extends QueryFilters
 {
-    public function project($id)
+    public function survey_program($id)
     {
-        $this->query->where('project_id', $id);
+        $this->query->where('survey_program_id', $id);
     }
 
     public function search($string)

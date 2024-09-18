@@ -8,7 +8,7 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Support\Facades\Auth;
 
-class ProjectFunctionRequest extends FormRequest
+class SurveyProgramFunctionRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -31,7 +31,7 @@ class ProjectFunctionRequest extends FormRequest
     {
         return [
             'name' => 'required|string',
-            'project_id' => 'required|integer|exists:projects,id',
+            'survey_program_id' => 'required|integer|exists:survey_programs,id',
         ];
     }
 

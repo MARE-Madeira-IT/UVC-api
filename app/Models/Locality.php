@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Locality extends Model
 {
     use FiltersRecords;
-    protected $fillable = ['name', 'code', 'project_id'];
+    protected $fillable = ['name', 'code', 'survey_program_id'];
 
     protected $table = 'localities';
 
@@ -22,8 +22,8 @@ class Locality extends Model
         return $this->hasMany(Site::class, 'locality_id');
     }
 
-    public function project()
+    public function surveyProgram()
     {
-        return $this->belongsTo(Project::class, 'project_id');
+        return $this->belongsTo(SurveyProgram::class, 'survey_program_id');
     }
 }

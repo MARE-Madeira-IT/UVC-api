@@ -32,7 +32,7 @@ class TaxaRequest extends FormRequest
     {
         $id = $this->id;
         $name = $this->name;
-        $project_id = $this->project_id;
+        $survey_program_id = $this->survey_program_id;
 
 
         return [
@@ -42,9 +42,9 @@ class TaxaRequest extends FormRequest
                 Rule::unique('taxas')->where(function ($query) use (
                     $id,
                     $name,
-                    $project_id
+                    $survey_program_id
                 ) {
-                    $query->where('name', $name)->where('project_id', $project_id);
+                    $query->where('name', $name)->where('survey_program_id', $survey_program_id);
                     if ($id) {
                         $query->where('id', '!=', $id);
                     }
@@ -55,7 +55,7 @@ class TaxaRequest extends FormRequest
             'species' => 'nullable|string',
             'phylum' => 'nullable|string',
             'category_id' => 'required|integer',
-            'project_id' => 'required|integer',
+            'survey_program_id' => 'required|integer',
             'validated' => 'nullable|boolean',
             'indicators' => 'nullable|array',
         ];

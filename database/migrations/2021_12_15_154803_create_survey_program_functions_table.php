@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateProjectFunctionsTable extends Migration
+class CreateSurveyProgramFunctionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,13 @@ class CreateProjectFunctionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('project_functions', function (Blueprint $table) {
+        Schema::create('survey_program_functions', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->integer('project_id')->unsigned();
+            $table->integer('survey_program_id')->unsigned();
             $table->timestamps();
 
-            $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
+            $table->foreign('survey_program_id')->references('id')->on('survey_programs')->onDelete('cascade');
         });
     }
 
@@ -30,6 +30,6 @@ class CreateProjectFunctionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('functions');
+        Schema::dropIfExists('survey_program_functions');
     }
 }
