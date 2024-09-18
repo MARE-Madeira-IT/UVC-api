@@ -17,6 +17,7 @@ use App\Http\Controllers\SurveyProgramController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SizeCategoryController;
 use App\Http\Controllers\SubstrateController;
+use App\Http\Controllers\SurveyProgramHasUserController;
 use App\Http\Controllers\TaxaCategoryController;
 use App\Http\Controllers\TaxaController;
 use Illuminate\Support\Facades\Route;
@@ -34,9 +35,12 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::get('survey-program-statistics/{surveyProgram}', FetchSurveyProgramStatisticsInvokable::class)->middleware('survey_program_permission:show');
 
-    Route::get('invites', FetchSurveyProgramInvitesInvokable::class);
-    Route::post('invite-member', InviteMemberToSurveyProgramInvokable::class);
-    Route::put('accept-member/{invite}', AcceptMemberToSurveyProgramInvokable::class);
+    Route::get('surveyProgramHasUsers', [SurveyProgramHasUserController::class, "index"]);
+    Route::get('invites', [SurveyProgramHasUserController::class, "getUserInvites"]);
+    Route::post('surveyProgramHasUsers/invite-member', [SurveyProgramHasUserController::class, "store"]);
+    Route::put('accept-member/{surveyProgramHasUser}', [SurveyProgramHasUserController::class, "acceptInvite"]);
+    Route::put('surveyProgramHasUsers/{surveyProgramHasUser}', [SurveyProgramHasUserController::class, "update"]);
+    Route::delete('surveyProgramHasUsers/{surveyProgramHasUser}', [SurveyProgramHasUserController::class, "destroy"]);
 
 
     Route::get('localities', [LocalityController::class, "index"])->middleware('survey_program_permission:show');
@@ -70,8 +74,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::delete('reports/{report}', [ReportController::class, "destroy"])->middleware('survey_program_permission:delete');
 
 
-    Route::get('surveyPrograms/members', [SurveyProgramController::class, "getMembers"]);
-    Route::put('surveyPrograms/{survey_program_id}/members/{user_id}', [SurveyProgramController::class, "updateMember"]);
     Route::get('surveyPrograms', [SurveyProgramController::class, "index"]);
     Route::post('surveyPrograms', [SurveyProgramController::class, "store"]);
     Route::get('surveyPrograms/{surveyProgram}', [SurveyProgramController::class, "show"])->middleware('survey_program_permission:show');

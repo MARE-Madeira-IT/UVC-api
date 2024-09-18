@@ -18,6 +18,7 @@ class CreateSurveyProgramHasUsersTable extends Migration
             $table->integer('survey_program_id')->unsigned();
             $table->integer('user_id')->unsigned()->nullable();
             $table->boolean('active')->default(false);
+            $table->boolean("accepted")->default(false);
             $table->timestamps();
             $table->unique(['user_id', 'survey_program_id']);
 

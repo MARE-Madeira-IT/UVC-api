@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\SurveyProgramExport;
 use App\Http\Controllers\Controller;
+use App\Http\QueryFilters\MemberFilters;
 use App\Http\QueryFilters\SurveyProgramFilters;
 use App\Http\QueryFilters\UserFilters;
 use App\Http\Requests\SurveyProgramRequest;
@@ -112,44 +113,6 @@ class SurveyProgramController extends Controller
         $permissions = $mareSurveyProgramHasUser->permissions()->get()->pluck("name");
 
         return response()->json(["message" => 'SurveyProgram is private', 'permissions' => $permissions], 200);
-    }
-
-
-    public function getMembers(Request $request)
-    {
-        $filters = UserFilters::hydrate($request->query());
-        $userIds = User::filterBy($filters)->paginate(10)->pluck("id");
-
-        return SurveyProgramUserResource::collection(SurveyProgramHasUser::where('survey_program_id', $request->survey_program)
-            ->whereIn('user_id', $userIds)->get());
-    }
-
-
-    public function updateMember($survey_program_id, $user_id, Request $request)
-    {
-        $surveyProgramHasUser = SurveyProgramHasUser::where([
-            "survey_program_id" => $survey_program_id,
-            "user_id" => $user_id,
-        ])->first();
-
-        $permissionsToAdd = [Permission::where('name', 'show')->first()->id];
-        if ($request->create) {
-            array_push($permissionsToAdd, Permission::where('name', 'create')->first()->id);
-        }
-
-        if ($request->edit) {
-            array_push($permissionsToAdd, Permission::where('name', 'edit')->first()->id);
-            array_push($permissionsToAdd, Permission::where('name', 'delete')->first()->id);
-        }
-        $surveyProgramHasUser->permissions()->detach();
-
-        $surveyProgramHasUser->permissions()->attach($permissionsToAdd);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'The user permissions have been updated',
-            'data' => new SurveyProgramUserResource($surveyProgramHasUser),
-        ], 201);
     }
 
     public function xlsxExport(SurveyProgram $surveyProgram)
