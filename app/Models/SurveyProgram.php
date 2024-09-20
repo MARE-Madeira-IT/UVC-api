@@ -13,16 +13,15 @@ class SurveyProgram extends Model
     protected $connection = 'mysql';
 
     protected $fillable = [
+        "project_id",
         "name",
         "description",
-        "public",
-        "geographic_area",
-        "start_period",
-        "end_period",
-        "stage",
-        "community_size",
-        "contact"
     ];
+
+    public function project()
+    {
+        return $this->belongsTo(Project::class);
+    }
 
     public function sites()
     {
@@ -36,7 +35,7 @@ class SurveyProgram extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class, 'wave_mare.survey_program_has_users', 'survey_program_id', 'user_id');
+        return $this->belongsToMany(User::class, 'wave_mare.survey_program_users', 'survey_program_id', 'user_id');
     }
 
     public function taxas()

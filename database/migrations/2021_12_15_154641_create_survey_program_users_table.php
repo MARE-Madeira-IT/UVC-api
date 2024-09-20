@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSurveyProgramHasUsersTable extends Migration
+class CreateSurveyProgramUsersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreateSurveyProgramHasUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('survey_program_has_users', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('survey_program_id')->unsigned();
-            $table->integer('user_id')->unsigned()->nullable();
+        Schema::create('survey_program_users', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('survey_program_id');
+            $table->unsignedInteger('user_id')->nullable();
             $table->boolean('active')->default(false);
             $table->boolean("accepted")->default(false);
             $table->timestamps();
@@ -34,6 +34,6 @@ class CreateSurveyProgramHasUsersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('survey_program_has_users');
+        Schema::dropIfExists('survey_program_users');
     }
 }

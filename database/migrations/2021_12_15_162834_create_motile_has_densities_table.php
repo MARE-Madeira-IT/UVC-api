@@ -14,10 +14,10 @@ class CreateMotileHasDensitiesTable extends Migration
     public function up()
     {
         Schema::create('motile_has_densities', function (Blueprint $table) {
-            $table->increments('id');
+            $table->id();
             $table->integer('count');
-            $table->integer('density_id')->unsigned();
-            $table->integer('motile_id')->unsigned();
+            $table->unsignedBigInteger('density_id');
+            $table->unsignedBigInteger('motile_id');
             $table->timestamps();
 
             $table->foreign('density_id')->references('id')->on('densities')->onDelete('cascade');

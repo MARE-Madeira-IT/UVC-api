@@ -14,7 +14,7 @@ class CreateReportsTable extends Migration
     public function up()
     {
         Schema::create('reports', function (Blueprint $table) {
-            $table->increments('id');
+            $table->id();
             $table->string('code')->unique();
             $table->date('date');
             $table->integer('transect');
@@ -28,9 +28,9 @@ class CreateReportsTable extends Migration
             $table->string('dom_substrate')->nullable();
             $table->string('site_area')->nullable();
             $table->decimal('distance', 2, 1)->nullable();
-            $table->integer('survey_program_id')->unsigned();
-            $table->integer('site_id')->unsigned();
-            $table->integer('depth_id')->unsigned();
+            $table->unsignedBigInteger('survey_program_id');
+            $table->unsignedBigInteger('site_id');
+            $table->unsignedBigInteger('depth_id');
             $table->integer('surveyed_area');
 
             $table->timestamps();

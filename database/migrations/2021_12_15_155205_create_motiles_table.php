@@ -14,9 +14,9 @@ class CreateMotilesTable extends Migration
     public function up()
     {
         Schema::create('motiles', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('taxa_id')->unsigned();
-            $table->integer('size_category_id')->unsigned()->nullable();
+            $table->id();
+            $table->unsignedBigInteger('taxa_id');
+            $table->unsignedBigInteger('size_category_id')->nullable();
             $table->integer('size')->nullable();
             $table->integer('ntotal')->default(0);
             $table->string('notes')->nullable();

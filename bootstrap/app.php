@@ -14,7 +14,8 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
-            'survey_program_permission' => SurveyProgramPermissionMiddleware::class
+            'survey_program_permission' => SurveyProgramPermissionMiddleware::class,
+            'workspace_permission' => SurveyProgramPermissionMiddleware::class,
         ]);
         $middleware->append([
             \Illuminate\Session\Middleware\StartSession::class,

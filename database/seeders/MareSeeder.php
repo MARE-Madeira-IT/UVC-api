@@ -10,7 +10,9 @@ use App\Models\Indicator;
 use App\Models\IndicatorHasValue;
 use App\Models\Locality;
 use App\Models\Permission;
-use App\Models\SurveyProgramHasUser;
+use App\Models\Project;
+use App\Models\ProjectUser;
+use App\Models\SurveyProgramUser;
 use App\Models\Report;
 use App\Models\Site;
 use App\Models\SizeCategory;
@@ -19,6 +21,8 @@ use App\Models\SurveyProgram;
 use App\Models\Taxa;
 use App\Models\TaxaCategory;
 use App\Models\User;
+use App\Models\Workspace;
+use App\Models\WorkspaceUser;
 use Illuminate\Database\Seeder;
 
 class MareSeeder extends Seeder
@@ -30,12 +34,6 @@ class MareSeeder extends Seeder
      */
     public function run()
     {
-        $surveyProgram = SurveyProgram::create([
-            "name" => "MARE-Madeira",
-            "description" => "Lorem ipsum dolor sit amet consectetur adipiscing elit Ut et massa mi. Aliquam in hendrerit urna. Pellentesque sit amet sapien.",
-            "community_size" => 10,
-        ]);
-
         $permissions = [
             "create",
             "show",
@@ -48,14 +46,53 @@ class MareSeeder extends Seeder
             Permission::create(["name" => $name]);
         }
 
+        $workspace = Workspace::create([
+            "name" => "MARE-Madeira",
+            "description" => "A non-profit marine research institute on Madeira Island, MARE-Madeira is one of seven MARE regional research units across Portugal."
 
-        $mareSurveyProgramHasUser = SurveyProgramHasUser::create([
-            "survey_program_id" => $surveyProgram->id,
-            "user_id" => User::where('note', 'admin account')->first()->id,
-            'active' => 1
         ]);
 
-        $mareSurveyProgramHasUser->permissions()->attach(Permission::all()->pluck('id')->toArray());
+        $workspaceUser = WorkspaceUser::create([
+            'workspace_id' => $workspace->id,
+            "user_id" => User::where('note', 'admin account')->first()->id,
+            'active' => 1,
+            'accepted' => 1,
+        ]);
+        $workspaceUser->permissions()->attach(Permission::all()->pluck('id')->toArray());
+
+
+        $project = Project::create([
+            "workspace_id" => $workspace->id,
+            "name" => "Climarest",
+            "description" => "CLIMAREST is an EU-funded research project consisting of 18 partners from along the length of the European coastline. The project belongs to the EU Mission Restore our Ocean and Waters, and is a member of the Lighthouse for the Arctic and Atlantic Basin.",
+            "community_size" => "<10",
+        ]);
+
+        $projectUser = ProjectUser::create([
+            'project_id' => $project->id,
+            "user_id" => User::where('note', 'admin account')->first()->id,
+            'active' => 1,
+            'accepted' => 1,
+        ]);
+        $projectUser->permissions()->attach(Permission::all()->pluck('id')->toArray());
+
+
+        $surveyProgram = SurveyProgram::create([
+            "project_id" => $project->id,
+            "name" => "Underwater Survey",
+            "description" => "Lorem ipsum dolor sit amet consectetur adipiscing elit Ut et massa mi. Aliquam in hendrerit urna. Pellentesque sit amet sapien.",
+
+        ]);
+
+
+        $mareSurveyProgramUser = SurveyProgramUser::create([
+            "survey_program_id" => $surveyProgram->id,
+            "user_id" => User::where('note', 'admin account')->first()->id,
+            'active' => 1,
+            'accepted' => 1,
+        ]);
+
+        $mareSurveyProgramUser->permissions()->attach(Permission::all()->pluck('id')->toArray());
 
 
         $indicators = [

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\SurveyProgramHasUser;
+use App\Models\SurveyProgramUser;
 use App\Models\Report;
 use App\Models\Site;
 use App\Models\SurveyProgram;
@@ -19,7 +19,7 @@ class FetchSurveyProgramStatisticsInvokable extends Controller
      */
     public function __invoke(SurveyProgram $surveyProgram)
     {
-        $members = SurveyProgramHasUser::where('survey_program_id', $surveyProgram->id)->count();
+        $members = SurveyProgramUser::where('survey_program_id', $surveyProgram->id)->count();
         $reports = Report::where('survey_program_id', $surveyProgram->id)->count();
         $sites = Site::whereHas('locality', function ($query) use ($surveyProgram) {
             $query->where('survey_program_id', $surveyProgram->id);

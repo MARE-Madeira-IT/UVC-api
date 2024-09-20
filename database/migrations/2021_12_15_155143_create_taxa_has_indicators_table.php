@@ -14,10 +14,10 @@ class CreateTaxaHasIndicatorsTable extends Migration
     public function up()
     {
         Schema::create('taxa_has_indicators', function (Blueprint $table) {
-            $table->increments('id');
+            $table->id();
             $table->string('name')->unique();
-            $table->integer('taxa_id')->unsigned();
-            $table->integer('indicator_id')->unsigned();
+            $table->unsignedBigInteger('taxa_id');
+            $table->unsignedBigInteger('indicator_id');
             $table->timestamps();
 
             $table->foreign('taxa_id')->references('id')->on('taxas')->onDelete('cascade');

@@ -3,21 +3,20 @@
 namespace App\Models;
 
 use Cerbero\QueryFilters\FiltersRecords;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class SurveyProgramHasUser extends Pivot
+class WorkspaceUser extends Pivot
 {
     use FiltersRecords;
 
     public $incrementing = true;
 
-    protected $table = 'wave_mare.survey_program_has_users';
+    protected $table = 'wave_mare.workspace_users';
     protected $connection = 'mysql';
 
     protected $fillable = [
         "id",
-        "survey_program_id",
+        "workspace_id",
         "user_id",
         "active",
         "accepted"
@@ -25,7 +24,7 @@ class SurveyProgramHasUser extends Pivot
 
     public function permissions()
     {
-        return $this->belongsToMany(Permission::class, 'survey_program_user_has_permissions', 'survey_program_has_users_id', 'permission_id');
+        return $this->belongsToMany(Permission::class, 'workspace_user_has_permissions', 'workspace_user_id', 'permission_id');
     }
 
     public function user()
@@ -33,8 +32,8 @@ class SurveyProgramHasUser extends Pivot
         return $this->belongsTo(User::class);
     }
 
-    public function surveyProgram()
+    public function workspace()
     {
-        return $this->belongsTo(SurveyProgram::class);
+        return $this->belongsTo(Workspace::class);
     }
 }

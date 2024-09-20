@@ -9,17 +9,23 @@ use App\Http\Controllers\FetchSelfSurveyProgramsInvokable;
 use App\Http\Controllers\InviteMemberToSurveyProgramInvokable;
 use App\Http\Controllers\BenthicController;
 use App\Http\Controllers\DepthController;
+use App\Http\Controllers\FetchSelfProjectsInvokable;
+use App\Http\Controllers\FetchSelfWorkspacesInvokable;
 use App\Http\Controllers\SurveyProgramFunctionController;
 use App\Http\Controllers\IndicatorController;
 use App\Http\Controllers\LocalityController;
 use App\Http\Controllers\MotileController;
+use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\ProjectUserController;
 use App\Http\Controllers\SurveyProgramController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SizeCategoryController;
 use App\Http\Controllers\SubstrateController;
-use App\Http\Controllers\SurveyProgramHasUserController;
+use App\Http\Controllers\SurveyProgramUserController;
 use App\Http\Controllers\TaxaCategoryController;
 use App\Http\Controllers\TaxaController;
+use App\Http\Controllers\WorkspaceController;
+use App\Http\Controllers\WorkspaceUserController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('register', [AuthController::class, "register"]);
@@ -27,21 +33,35 @@ Route::post('login', [AuthController::class, "login"]);
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('logout', [AuthController::class, "logout"]);
-    Route::get('self-survey-programs', FetchSelfSurveyProgramsInvokable::class);
 
+    Route::get('self-survey-programs', [SurveyProgramController::class, 'self']);
+    Route::get('self-projects', [ProjectController::class, 'self']);
+    Route::get('self-workspaces', [WorkspaceController::class, 'self']);
 
     Route::get("export/{surveyProgram}", [SurveyProgramController::class, "xlsxExport"]);
-    Route::get('permissions/{surveyProgram}', [SurveyProgramController::class, "getSurveyProgramPermissions"]);
 
     Route::get('survey-program-statistics/{surveyProgram}', FetchSurveyProgramStatisticsInvokable::class)->middleware('survey_program_permission:show');
 
-    Route::get('surveyProgramHasUsers', [SurveyProgramHasUserController::class, "index"]);
-    Route::get('invites', [SurveyProgramHasUserController::class, "getUserInvites"]);
-    Route::post('surveyProgramHasUsers/invite-member', [SurveyProgramHasUserController::class, "store"]);
-    Route::put('accept-member/{surveyProgramHasUser}', [SurveyProgramHasUserController::class, "acceptInvite"]);
-    Route::put('surveyProgramHasUsers/{surveyProgramHasUser}', [SurveyProgramHasUserController::class, "update"]);
-    Route::delete('surveyProgramHasUsers/{surveyProgramHasUser}', [SurveyProgramHasUserController::class, "destroy"]);
+    Route::get('surveyProgramUsers', [SurveyProgramUserController::class, "index"]);
+    Route::post('surveyProgramUsers/invite-member', [SurveyProgramUserController::class, "store"]);
+    Route::put('surveyProgramUsers/{surveyProgramUser}', [SurveyProgramUserController::class, "update"]);
+    Route::delete('surveyProgramUsers/{surveyProgramUser}', [SurveyProgramUserController::class, "destroy"]);
+    Route::get('surveyProgramUsers/invites', [SurveyProgramUserController::class, "getUserInvites"]);
+    Route::put('surveyProgramUsers/{surveyProgramUser}/accept', [SurveyProgramUserController::class, "acceptInvite"]);
 
+    Route::get('projectUsers', [ProjectUserController::class, "index"]);
+    Route::post('projectUsers/invite-member', [ProjectUserController::class, "store"]);
+    Route::put('projectUsers/{projectUser}', [ProjectUserController::class, "update"]);
+    Route::delete('projectUsers/{projectUser}', [ProjectUserController::class, "destroy"]);
+    Route::get('projectUsers/invites', [ProjectUserController::class, "getUserInvites"]);
+    Route::put('projectUsers/{projectUser}/accept', [ProjectUserController::class, "acceptInvite"]);
+
+    Route::get('workspaceUsers', [WorkspaceUserController::class, "index"]);
+    Route::post('workspaceUsers/invite-member', [WorkspaceUserController::class, "store"]);
+    Route::put('workspaceUsers/{projectUser}', [WorkspaceUserController::class, "update"]);
+    Route::delete('workspaceUsers/{projectUser}', [WorkspaceUserController::class, "destroy"]);
+    Route::get('workspaceUsers/invites', [WorkspaceUserController::class, "getUserInvites"]);
+    Route::put('workspaceUsers/{projectUser}/accept', [WorkspaceUserController::class, "acceptInvite"]);
 
     Route::get('localities', [LocalityController::class, "index"])->middleware('survey_program_permission:show');
     Route::post('localities', [LocalityController::class, "store"])->middleware('survey_program_permission:create');
@@ -79,6 +99,21 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('surveyPrograms/{surveyProgram}', [SurveyProgramController::class, "show"])->middleware('survey_program_permission:show');
     Route::put('surveyPrograms/{surveyProgram}', [SurveyProgramController::class, "update"])->middleware('survey_program_permission:edit');
     Route::delete('surveyPrograms/{surveyProgram}', [SurveyProgramController::class, "destroy"])->middleware('survey_program_permission:delete');
+    Route::get('surveyPrograms/{surveyProgram}/permissions', [SurveyProgramController::class, "getSurveyProgramPermissions"]);
+
+    Route::get('projects', [ProjectController::class, "index"]);
+    Route::post('projects', [ProjectController::class, "store"]);
+    Route::get('projects/{project}', [ProjectController::class, "show"])->middleware('survey_program_permission:show');
+    Route::put('projects/{project}', [ProjectController::class, "update"])->middleware('survey_program_permission:edit');
+    Route::delete('projects/{project}', [ProjectController::class, "destroy"])->middleware('survey_program_permission:delete');
+    Route::get('projects/{project}/permissions', [ProjectController::class, "getProjectPermissions"]);
+
+    Route::get('workspaces', [WorkspaceController::class, "index"]);
+    Route::post('workspaces', [WorkspaceController::class, "store"]);
+    Route::get('workspaces/{workspace}', [WorkspaceController::class, "show"]);
+    Route::put('workspaces/{workspace}', [WorkspaceController::class, "update"]);
+    Route::delete('workspaces/{workspace}', [WorkspaceController::class, "destroy"]);
+    Route::get('workspaces/{workspace}/permissions', [WorkspaceController::class, "getWorkspacePermissions"]);
 
     Route::get('taxa_categories', [TaxaCategoryController::class, "index"])->middleware('survey_program_permission:show');
     Route::post('taxa_categories', [TaxaCategoryController::class, "store"])->middleware('survey_program_permission:create');
@@ -129,5 +164,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('functions', [SurveyProgramFunctionController::class, "selector"]);
         Route::get('report-coordinates', FetchReportCoordinatesInvokable::class);
         Route::get('taxa-categories', [TaxaController::class, "selector"]);
+        Route::get("workspaces", [WorkspaceController::class, "selector"]);
     });
 });

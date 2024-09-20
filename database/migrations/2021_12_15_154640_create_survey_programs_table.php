@@ -14,19 +14,12 @@ class CreateSurveyProgramsTable extends Migration
     public function up()
     {
         Schema::create('survey_programs', function (Blueprint $table) {
-            $table->increments('id');
+            $table->id();
             $table->string('name');
             $table->text('description');
-            $table->string('contact')->nullable();
-            $table->string('geographic_area')->nullable();
-            $table->string('start_period')->nullable();
-            $table->string('end_period')->nullable();
-            $table->string('stage')->default("Ongoing");
-            $table->string('community_size');
+            $table->unsignedBigInteger('project_id');
 
-
-
-            $table->boolean('public')->default(true);
+            $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
             $table->timestamps();
         });
     }

@@ -11,15 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('indicator_has_values', function (Blueprint $table) {
+        Schema::create('workspaces', function (Blueprint $table) {
             $table->id();
-
-            $table->unsignedBigInteger('indicator_id')->nullable();
             $table->string("name");
+            $table->text("description")->nullable();
+
             $table->timestamps();
-
-
-            $table->foreign('indicator_id')->references('id')->on('indicators')->onDelete('cascade');
         });
     }
 
@@ -28,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('indicator_has_values');
+        Schema::dropIfExists('workspaces');
     }
 };

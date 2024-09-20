@@ -2,27 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\QueryFilters\MemberFilters;
-use App\Http\Resources\SurveyProgramUserResource;
+use App\Http\QueryFilters\ProjectUserFilters;
+use App\Http\Resources\ProjectUserResource;
 use App\Models\Permission;
-use App\Models\SurveyProgramHasUser;
+use App\Models\ProjectUser;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class SurveyProgramHasUserController extends Controller
+class ProjectUserController extends Controller
 {
-    public function index(MemberFilters $filters)
+    public function index(ProjectUserFilters $filters)
     {
-        return SurveyProgramUserResource::collection(
-            SurveyProgramHasUser::filterBy($filters)->paginate(10)
+        return ProjectUserResource::collection(
+            ProjectUser::filterBy($filters)->paginate(10)
         );
     }
 
     public function getUserInvites()
     {
-        return SurveyProgramUserResource::collection(
-            SurveyProgramHasUser::where('user_id', Auth::id())->where('accepted', false)->get()
+        return ProjectUserResource::collection(
+            ProjectUser::where('user_id', Auth::id())->where('accepted', false)->get()
         );
     }
 
@@ -30,8 +30,8 @@ class SurveyProgramHasUserController extends Controller
     {
         $user = User::where('email', $request->email)->first();
         if ($user) {
-            $surveyProgramHasUser = SurveyProgramHasUser::create([
-                "survey_program_id" => $request->survey_program_id,
+            $projectUser = ProjectUser::create([
+                "project_id" => $request->project_id,
                 "user_id" => $user->id
             ]);
 
@@ -45,11 +45,11 @@ class SurveyProgramHasUserController extends Controller
                 array_push($permissionsToAdd, Permission::where('name', 'delete')->first()->id);
             }
 
-            $surveyProgramHasUser->permissions()->attach($permissionsToAdd);
+            $projectUser->permissions()->attach($permissionsToAdd);
 
             return response()->json([
-                'data' => new SurveyProgramUserResource(
-                    $surveyProgramHasUser
+                'data' => new ProjectUserResource(
+                    $projectUser
                 )
             ], 201);
         } else {
@@ -60,21 +60,21 @@ class SurveyProgramHasUserController extends Controller
         }
     }
 
-    public function acceptInvite(SurveyProgramHasUser $surveyProgramHasUser, Request $request)
+    public function acceptInvite(ProjectUser $projectUser, Request $request)
     {
         if ($request->status == 1) {
-            if ($surveyProgramHasUser) {
-                $surveyProgramHasUser->update([
+            if ($projectUser) {
+                $projectUser->update([
                     'active' => true,
                     'accepted' => true,
                 ]);
             }
         }
 
-        return SurveyProgramHasUser::where('user_id', Auth::id())->where('accepted', false)->with('surveyProgram')->get();
+        return ProjectUser::where('user_id', Auth::id())->where('accepted', false)->with('project')->get();
     }
 
-    public function update(SurveyProgramHasUser $surveyProgramHasUser, Request $request)
+    public function update(ProjectUser $projectUser, Request $request)
     {
         $permissionsToAdd = [Permission::where('name', 'show')->first()->id];
         if ($request->create) {
@@ -85,20 +85,20 @@ class SurveyProgramHasUserController extends Controller
             array_push($permissionsToAdd, Permission::where('name', 'edit')->first()->id);
             array_push($permissionsToAdd, Permission::where('name', 'delete')->first()->id);
         }
-        $surveyProgramHasUser->permissions()->detach();
+        $projectUser->permissions()->detach();
 
-        $surveyProgramHasUser->permissions()->attach($permissionsToAdd);
+        $projectUser->permissions()->attach($permissionsToAdd);
 
         return response()->json([
             'success' => true,
             'message' => 'The user permissions have been updated',
-            'data' => new SurveyProgramUserResource($surveyProgramHasUser),
+            'data' => new ProjectUserResource($projectUser),
         ], 201);
     }
 
-    public function destroy(SurveyProgramHasUser $surveyProgramHasUser)
+    public function destroy(ProjectUser $projectUser)
     {
-        $surveyProgramHasUser->delete();
+        $projectUser->delete();
 
         return response()->json(null, 204);
     }

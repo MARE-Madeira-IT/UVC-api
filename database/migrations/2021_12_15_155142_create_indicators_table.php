@@ -14,10 +14,10 @@ class CreateIndicatorsTable extends Migration
     public function up()
     {
         Schema::create('indicators', function (Blueprint $table) {
-            $table->increments('id');
+            $table->id();
             $table->string('name');
             $table->enum('type', ["number", "text", "select"]);
-            $table->integer('survey_program_id')->unsigned();
+            $table->unsignedBigInteger('survey_program_id');
             $table->timestamps();
 
             $table->unique(["name", "survey_program_id"]);

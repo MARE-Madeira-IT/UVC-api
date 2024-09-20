@@ -14,9 +14,9 @@ class CreateReportHasFunctionsTable extends Migration
     public function up()
     {
         Schema::create('report_has_functions', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('function_id')->unsigned();
-            $table->integer('report_id')->unsigned();
+            $table->id();
+            $table->unsignedBigInteger('function_id');
+            $table->unsignedBigInteger('report_id');
             $table->string('user')->nullable();
             $table->timestamps();
 

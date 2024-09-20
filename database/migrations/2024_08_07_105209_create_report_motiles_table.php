@@ -14,9 +14,9 @@ class CreateReportMotilesTable extends Migration
     public function up()
     {
         Schema::create('report_motiles', function (Blueprint $table) {
-            $table->increments('id');
+            $table->id();
             $table->string('type');
-            $table->integer('report_id')->unsigned();
+            $table->unsignedBigInteger('report_id');
 
 
             $table->foreign('report_id')->references('id')->on('reports')->onDelete('cascade');

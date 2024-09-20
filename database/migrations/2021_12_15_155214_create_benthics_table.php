@@ -14,12 +14,12 @@ class CreateBenthicsTable extends Migration
     public function up()
     {
         Schema::create('benthics', function (Blueprint $table) {
-            $table->increments('id');
+            $table->id();
             $table->integer('p##');
             $table->text('notes')->nullable();
-            $table->integer('substrate_id')->unsigned();
-            $table->integer('report_id')->unsigned();
-            $table->integer('taxa_id')->unsigned()->nullable();
+            $table->unsignedBigInteger('substrate_id');
+            $table->unsignedBigInteger('report_id');
+            $table->unsignedBigInteger('taxa_id')->nullable();
             $table->timestamps();
 
             $table->foreign('substrate_id')->references('id')->on('substrates')->onDelete('cascade');

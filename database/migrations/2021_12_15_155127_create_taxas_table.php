@@ -14,13 +14,13 @@ class CreateTaxasTable extends Migration
     public function up()
     {
         Schema::create('taxas', function (Blueprint $table) {
-            $table->increments('id');
+            $table->id();
             $table->string('name');
             $table->string('genus')->nullable();
             $table->string('species')->nullable();
             $table->string('phylum')->nullable();
-            $table->integer('survey_program_id')->unsigned();
-            $table->integer('category_id')->unsigned();
+            $table->unsignedBigInteger('survey_program_id');
+            $table->unsignedBigInteger('category_id');
             $table->timestamps();
 
             $table->unique(['survey_program_id', 'name']);

@@ -8,7 +8,7 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Support\Facades\Auth;
 
-class SurveyProgramRequest extends FormRequest
+class ProjectRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -30,9 +30,16 @@ class SurveyProgramRequest extends FormRequest
     public function rules()
     {
         return [
-            'project_id' => 'required|integer|exists:projects,id',
+            'workspace_id' => 'required|integer|exists:workspaces,id',
             'name' => 'required|string',
             'description' => 'required|string',
+            'public' => 'boolean',
+            'geographic_area' => 'required|string',
+            'start_period' => 'nullable|date',
+            'end_period' => 'nullable|date',
+            'contact' => 'nullable|string',
+            'stage' => 'nullable|string',
+            'community_size' => 'required|string',
         ];
     }
 

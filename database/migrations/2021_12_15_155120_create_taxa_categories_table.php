@@ -14,9 +14,9 @@ class CreateTaxaCategoriesTable extends Migration
     public function up()
     {
         Schema::create('taxa_categories', function (Blueprint $table) {
-            $table->increments('id');
+            $table->id();
             $table->string('name');
-            $table->integer('survey_program_id')->unsigned();
+            $table->unsignedBigInteger('survey_program_id');
             $table->timestamps();
 
             $table->unique(["name", "survey_program_id"]);

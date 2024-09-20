@@ -77,8 +77,20 @@ class User extends Authenticatable implements JWTSubject
 
     public function surveyPrograms()
     {
-        return $this->belongsToMany(SurveyProgram::class, 'survey_program_has_users', 'user_id', 'survey_program_id')
-            ->using(SurveyProgramHasUser::class);
+        return $this->belongsToMany(SurveyProgram::class, 'survey_program_users', 'user_id', 'survey_program_id')
+            ->using(SurveyProgramUser::class);
+    }
+
+    public function projects()
+    {
+        return $this->belongsToMany(Project::class, 'project_users', 'user_id', 'project_id')
+            ->using(ProjectUser::class);
+    }
+
+    public function workspaces()
+    {
+        return $this->belongsToMany(Workspace::class, 'workspace_users', 'user_id', 'workspace_id')
+            ->using(WorkspaceUser::class);
     }
 
     //user has many UserHasDivingSpot with user_id as key

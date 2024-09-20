@@ -8,10 +8,10 @@ use Cerbero\QueryFilters\QueryFilters;
  * Filter records based on query parameters.
  *
  */
-class SurveyProgramFilters extends QueryFilters
+class SurveyProgramUserFilters extends QueryFilters
 {
-    public function name($string)
+    public function survey_program($id)
     {
-        $this->query->where('name', 'like', '%' . $string . '%');
+        $this->query->where('survey_program_id', $id);
     }
 }

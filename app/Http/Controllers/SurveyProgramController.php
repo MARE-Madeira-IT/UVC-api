@@ -14,7 +14,7 @@ use App\Http\Resources\UserResource;
 use App\Models\SurveyProgramFunction;
 use App\Models\Permission;
 use App\Models\SurveyProgram;
-use App\Models\SurveyProgramHasUser;
+use App\Models\SurveyProgramUser;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -43,13 +43,13 @@ class SurveyProgramController extends Controller
 
         $surveyProgram = SurveyProgram::create($validator);
 
-        $mareSurveyProgramHasUser = SurveyProgramHasUser::create([
+        $mareSurveyProgramUser = SurveyProgramUser::create([
             'survey_program_id' => $surveyProgram->id,
             'user_id' => Auth::id(),
             'active' => 1
         ]);
 
-        $mareSurveyProgramHasUser->permissions()->attach(Permission::all()->pluck('id')->toArray());
+        $mareSurveyProgramUser->permissions()->attach(Permission::all()->pluck('id')->toArray());
 
         return new SurveyProgramResource($surveyProgram);
     }
@@ -98,19 +98,19 @@ class SurveyProgramController extends Controller
     {
         $user = Auth::user();
 
-        $mareSurveyProgramHasUser = SurveyProgramHasUser::where('user_id', $user->id)
+        $mareSurveyProgramUser = SurveyProgramUser::where('user_id', $user->id)
             ->where('survey_program_id', $surveyProgram->id)
             ->where('active', true)
             ->first();
 
-        if (is_null($mareSurveyProgramHasUser)) {
+        if (is_null($mareSurveyProgramUser)) {
             return response()->json([
                 "message" => 'You don\'t have access to this survey program',
                 'permissions' => []
             ], 403);
         }
 
-        $permissions = $mareSurveyProgramHasUser->permissions()->get()->pluck("name");
+        $permissions = $mareSurveyProgramUser->permissions()->get()->pluck("name");
 
         return response()->json(["message" => 'SurveyProgram is private', 'permissions' => $permissions], 200);
     }

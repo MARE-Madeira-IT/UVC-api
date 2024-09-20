@@ -8,7 +8,7 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Support\Facades\Auth;
 
-class SurveyProgramRequest extends FormRequest
+class WorkspaceRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -30,9 +30,14 @@ class SurveyProgramRequest extends FormRequest
     public function rules()
     {
         return [
-            'project_id' => 'required|integer|exists:projects,id',
             'name' => 'required|string',
             'description' => 'required|string',
+            'users' => 'required|array',
+            'users.*.id' => 'sometimes|integer',
+            'users.*.email' => 'required|email|exists:mysql_wave.users,email',
+            'users.*.create' => 'sometimes|boolean',
+            'users.*.edit' => 'sometimes|boolean',
+            'users.*.show' => 'sometimes|boolean',
         ];
     }
 

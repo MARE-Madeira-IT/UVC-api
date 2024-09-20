@@ -3,7 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\SurveyProgram;
-use App\Models\SurveyProgramHasUser;
+use App\Models\SurveyProgramUser;
 use Closure;
 use Illuminate\Support\Facades\Auth;
 
@@ -12,16 +12,16 @@ class SurveyProgramPermissionMiddleware
 
     private function checkUserPermissionOnSurveyProgram($user_id, $survey_program_id, $permission)
     {
-        $mareSurveyProgramHasUser = SurveyProgramHasUser::where('user_id', $user_id)
+        $mareSurveyProgramUser = SurveyProgramUser::where('user_id', $user_id)
             ->where('survey_program_id', $survey_program_id)
             ->where('active', true)
             ->first();
 
-        if (is_null($mareSurveyProgramHasUser)) {
+        if (is_null($mareSurveyProgramUser)) {
             return false;
         }
 
-        return $mareSurveyProgramHasUser->permissions()->where('name', $permission)->count() > 0;
+        return $mareSurveyProgramUser->permissions()->where('name', $permission)->count() > 0;
     }
 
     /**

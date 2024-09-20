@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class SurveyProgramResource extends JsonResource
+class WorkspaceResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -18,7 +18,7 @@ class SurveyProgramResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'description' => $this->description,
-            'users' => UserResource::collection($this->users),
+            'users' => WorkspaceUserResource::collection($this->workspaceUsers),
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at
 

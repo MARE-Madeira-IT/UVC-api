@@ -14,8 +14,8 @@ class CreateSitesTable extends Migration
     public function up()
     {
         Schema::create('sites', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('locality_id')->unsigned();
+            $table->id();
+            $table->unsignedBigInteger('locality_id');
             $table->string('name');
             $table->string('code');
             $table->decimal('latitude', 10, 7)->nullable();
