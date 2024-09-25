@@ -14,4 +14,17 @@ class SurveyProgramFilters extends QueryFilters
     {
         $this->query->where('name', 'like', '%' . $string . '%');
     }
+
+    public function project($ids)
+    {
+        $this->query->whereIn('project_id', $ids);
+    }
+
+    public function search($string)
+    {
+        $this->query->where(function ($query) use ($string) {
+            $query->where('name', 'like', '%' . $string . '%')
+                ->orWhere('description', 'like', '%' . $string . '%');
+        });
+    }
 }

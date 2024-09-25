@@ -23,6 +23,7 @@ class CreateSitesTable extends Migration
             $table->timestamps();
 
             $table->foreign('locality_id')->references('id')->on('localities')->onDelete('cascade');
+            $table->softDeletes();
         });
     }
 

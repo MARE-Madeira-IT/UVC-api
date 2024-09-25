@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Cerbero\QueryFilters\FiltersRecords;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Workspace extends Model
 {
-    use FiltersRecords;
+    use FiltersRecords, SoftDeletes;
 
     protected $table = 'wave_mare.workspaces';
     protected $connection = 'mysql';

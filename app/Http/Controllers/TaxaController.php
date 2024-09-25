@@ -13,6 +13,7 @@ use App\Http\Resources\TaxaResource;
 use App\Models\Indicator;
 use App\Models\Taxa;
 use App\Models\TaxaCategory;
+use App\Models\TaxaHasIndicator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -103,14 +104,31 @@ class TaxaController extends Controller
 
         $indicators = $validator["indicators"];
 
-        $taxa->indicators()->detach();
+        $taxaHasIndicatorsNotToDelete = array();
+        $currentTaxaHasIndicatorsIds = $taxa->taxaHasIndicators->pluck("id")->toArray();
 
         foreach ($indicators as $key => $value) {
             $indicator = Indicator::where('name', $key)->where('survey_program_id', $taxa->survey_program_id)->first();
-            $taxa->indicators()->attach($indicator->id, ["name" => $value]);
+
+            $taxaHasIndicator = TaxaHasIndicator::updateOrCreate(
+                [
+                    "taxa_id" => $taxa->id,
+                    "indicator_id" => $indicator->id,
+                ],
+                [
+                    "taxa_id" => $taxa->id,
+                    "indicator_id" => $indicator->id,
+                    "name" => $value,
+                ]
+            );
+            array_push($taxaHasIndicatorsNotToDelete, $taxaHasIndicator->id);
         }
 
-        return new TaxaResource($taxa);
+        $taxaHasIndicatorsToDelete = array_diff($currentTaxaHasIndicatorsIds, $taxaHasIndicatorsNotToDelete);
+
+        TaxaHasIndicator::whereIn("id", $taxaHasIndicatorsToDelete)->delete();
+
+        return new TaxaResource($taxa->fresh());
     }
 
     /**

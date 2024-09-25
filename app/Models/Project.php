@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Cerbero\QueryFilters\FiltersRecords;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Project extends Model
 {
-    use FiltersRecords;
+    use FiltersRecords, SoftDeletes;
 
     protected $table = 'wave_mare.projects';
     protected $connection = 'mysql';
@@ -38,5 +39,10 @@ class Project extends Model
     public function users()
     {
         return $this->belongsToMany(User::class, 'wave_mare.project_users', 'project_id', 'user_id');
+    }
+
+    public function projectUsers()
+    {
+        return $this->hasMany(ProjectUser::class);
     }
 }

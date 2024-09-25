@@ -18,7 +18,8 @@ class CreateSurveyProgramFunctionsTable extends Migration
             $table->string('name');
             $table->unsignedBigInteger('survey_program_id');
             $table->timestamps();
-
+            $table->softDeletes();
+            
             $table->foreign('survey_program_id')->references('id')->on('survey_programs')->onDelete('cascade');
         });
     }

@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Cerbero\QueryFilters\FiltersRecords;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class TaxaCategory extends Model
 {
-    use FiltersRecords;
+    use FiltersRecords, SoftDeletes;
 
     protected $fillable = ['name', 'survey_program_id'];
 

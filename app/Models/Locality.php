@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Cerbero\QueryFilters\FiltersRecords;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Locality extends Model
 {
-    use FiltersRecords;
+    use FiltersRecords, SoftDeletes;
+    
     protected $fillable = ['name', 'code', 'survey_program_id'];
 
     protected $table = 'localities';

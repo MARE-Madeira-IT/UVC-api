@@ -5,12 +5,15 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\QueryFilters\ProjectFilters;
+use App\Http\Requests\MemberChangeRequest;
 use App\Http\Requests\ProjectRequest;
 use App\Http\Resources\ProjectResource;
 use App\Models\Permission;
 use App\Models\Project;
 use App\Models\ProjectUser;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ProjectController extends Controller
 {
@@ -45,7 +48,8 @@ class ProjectController extends Controller
         $projectUser = ProjectUser::create([
             'project_id' => $project->id,
             'user_id' => Auth::id(),
-            'active' => 1
+            'active' => 1,
+            'accepted' => 1,
         ]);
 
         $projectUser->permissions()->attach(Permission::all()->pluck('id')->toArray());
@@ -64,6 +68,22 @@ class ProjectController extends Controller
         return new ProjectResource($project);
     }
 
+    private function hasPermission($project, $permission)
+    {
+        $user_id = Auth::id();
+        $projectUser = ProjectUser::where('user_id', $user_id)
+            ->where('project_id', $project->id)
+            ->where('active', true)
+            ->first();
+
+        if (is_null($projectUser)) {
+            return false;
+        }
+
+        return $projectUser->permissions()->where('name', $permission)->count() > 0;
+    }
+
+
 
     /**
      * Update the specified resource in storage.
@@ -74,10 +94,73 @@ class ProjectController extends Controller
      */
     public function update(ProjectRequest $request, Project $project)
     {
+        if (!self::hasPermission($project, 'edit')) {
+            return response()->json(["You don't have access to edit the project: \"{$project->name}\""], 403);
+        }
+        DB::beginTransaction();
+
         $validator = $request->validated();
 
         $project->update($validator);
+
+        DB::commit();
         return new ProjectResource($project);
+    }
+
+    public function updateUsers(MemberChangeRequest $request, Project $project)
+    {
+        if (!self::hasPermission($project, 'edit')) {
+            return response()->json(["You don't have access to edit the project: \"{$project->name}\""], 403);
+        }
+
+        $validator = $request->validated();
+
+        $currentUsersIds = $project->projectUsers->pluck("id")->toArray();
+        $usersToKeep = array();
+
+
+        foreach ($validator["users"] as $user) {
+
+            $existingUser = User::where('email', $user["email"])->first();
+            if (is_null($existingUser)) {
+                return response()->json(
+                    ["message" => "The user with email " . $user["email"] . " doesn't exist"],
+                    409
+                );
+            }
+
+            $projectUser = ProjectUser::updateOrCreate(
+                [
+                    'user_id' => $existingUser["id"],
+                    "project_id" => $project->id
+                ],
+                [
+                    "project_id" => $project->id,
+                    "user_id" => $existingUser->id
+                ]
+            );
+            array_push($usersToKeep, $projectUser->id);
+
+            $projectUser->permissions()->detach();
+
+            $permissionsToAdd = [Permission::where('name', 'show')->first()->id];
+            if (array_key_exists("create", $user) && $user["create"]) {
+                array_push($permissionsToAdd, Permission::where('name', 'create')->first()->id);
+            }
+
+            if (array_key_exists("edit", $user) && $user["edit"]) {
+                array_push($permissionsToAdd, Permission::where('name', 'edit')->first()->id);
+                array_push($permissionsToAdd, Permission::where('name', 'delete')->first()->id);
+            }
+
+            $projectUser->permissions()->attach($permissionsToAdd);
+        }
+
+        $idsToRemove = array_diff($currentUsersIds, $usersToKeep);
+
+        ProjectUser::whereIn('id', $idsToRemove)->delete();
+
+        return new ProjectResource($project->fresh());
     }
 
     /**
@@ -88,6 +171,11 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
+        if (!self::hasPermission($project, 'edit')) {
+            return response()->json(["You don't have access to edit the project: \"{$project->name}\""], 403);
+        }
+
+        $project->projectUsers()->delete();
         $project->delete();
 
         return response()->json(null, 204);

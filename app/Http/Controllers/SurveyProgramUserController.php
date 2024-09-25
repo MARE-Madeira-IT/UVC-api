@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\QueryFilters\SurveyProgramUserFilters;
 use App\Http\Resources\SurveyProgramUserResource;
 use App\Models\Permission;
+use App\Models\ProjectUser;
 use App\Models\SurveyProgramUser;
 use App\Models\User;
+use App\Models\WorkspaceUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -68,6 +70,32 @@ class SurveyProgramUserController extends Controller
                     'active' => true,
                     'accepted' => true,
                 ]);
+
+                ProjectUser::updateOrCreate(
+                    [
+                        'user_id' => Auth::id(),
+                        'project_id' => $surveyProgramUser->surveyProgram->project->id,
+                    ],
+                    [
+                        'user_id' => Auth::id(),
+                        'project_id' => $surveyProgramUser->surveyProgram->project->id,
+                        'accepted' => true,
+                        'active' => true,
+                    ]
+                );
+
+                WorkspaceUser::updateOrCreate(
+                    [
+                        'user_id' => Auth::id(),
+                        'workspace_id' => $surveyProgramUser->surveyProgram->project->workspace->id,
+                    ],
+                    [
+                        'user_id' => Auth::id(),
+                        'workspace_id' => $surveyProgramUser->surveyProgram->project->workspace->id,
+                        'accepted' => true,
+                        'active' => true,
+                    ]
+                );
             }
         }
 

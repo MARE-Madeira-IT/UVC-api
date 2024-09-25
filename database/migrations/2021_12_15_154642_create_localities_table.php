@@ -21,6 +21,7 @@ class CreateLocalitiesTable extends Migration
             $table->timestamps();
 
             $table->foreign('survey_program_id')->references('id')->on('survey_programs')->onDelete('cascade');
+            $table->softDeletes();
         });
     }
 

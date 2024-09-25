@@ -18,10 +18,9 @@ class CreateTaxaCategoriesTable extends Migration
             $table->string('name');
             $table->unsignedBigInteger('survey_program_id');
             $table->timestamps();
+            $table->softDeletes();
 
             $table->unique(["name", "survey_program_id"]);
-
-
             $table->foreign('survey_program_id')->references('id')->on('survey_programs')->onDelete('cascade');
         });
     }

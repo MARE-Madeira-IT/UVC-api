@@ -14,4 +14,12 @@ class WorkspaceFilters extends QueryFilters
     {
         $this->query->where('name', 'like', '%' . $string . '%');
     }
+
+    public function search($string)
+    {
+        $this->query->where(function ($query) use ($string) {
+            $query->where('name', 'like', '%' . $string . '%')
+                ->orWhere('description', 'like', '%' . $string . '%');
+        });
+    }
 }

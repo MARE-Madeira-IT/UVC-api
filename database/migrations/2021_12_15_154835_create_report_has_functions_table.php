@@ -19,7 +19,8 @@ class CreateReportHasFunctionsTable extends Migration
             $table->unsignedBigInteger('report_id');
             $table->string('user')->nullable();
             $table->timestamps();
-
+            $table->softDeletes();
+            
             $table->foreign('function_id')->references('id')->on('survey_program_functions')->onDelete('cascade');
             $table->foreign('report_id')->references('id')->on('reports')->onDelete('cascade');
         });

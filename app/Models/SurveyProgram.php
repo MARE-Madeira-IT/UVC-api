@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Cerbero\QueryFilters\FiltersRecords;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class SurveyProgram extends Model
 {
-    use FiltersRecords;
+    use FiltersRecords, SoftDeletes;
 
     protected $table = 'wave_mare.survey_programs';
     protected $connection = 'mysql';
@@ -31,6 +32,11 @@ class SurveyProgram extends Model
     public function localities()
     {
         return $this->hasMany(Locality::class, 'survey_program_id');
+    }
+
+    public function surveyProgramUsers()
+    {
+        return $this->hasMany(SurveyProgramUser::class);
     }
 
     public function users()

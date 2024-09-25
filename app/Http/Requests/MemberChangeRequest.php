@@ -4,17 +4,15 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Contracts\Validation\Validator;
 
-class WorkspaceRequest extends FormRequest
+class MemberChangeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
-     *
-     * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         $user = Auth::user();
 
@@ -24,13 +22,17 @@ class WorkspaceRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules()
+    public function rules(): array
     {
         return [
-            'name' => 'required|string',
-            'description' => 'required|string',
+            'users' => 'required|array',
+            'users.*.id' => 'sometimes|integer',
+            'users.*.email' => 'required|email|exists:mysql_wave.users,email',
+            'users.*.create' => 'sometimes|boolean',
+            'users.*.edit' => 'sometimes|boolean',
+            'users.*.show' => 'sometimes|boolean',
         ];
     }
 

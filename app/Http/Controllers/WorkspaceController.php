@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\QueryFilters\WorkspaceFilters;
+use App\Http\Requests\MemberChangeRequest;
 use App\Http\Requests\WorkspaceRequest;
 use App\Http\Resources\WorkspaceResource;
 use App\Models\Permission;
@@ -52,7 +53,8 @@ class WorkspaceController extends Controller
         $workspaceUser = WorkspaceUser::create([
             'workspace_id' => $workspace->id,
             'user_id' => Auth::id(),
-            'active' => 1
+            'active' => 1,
+            'accepted' => 1,
         ]);
 
         $workspaceUser->permissions()->attach(Permission::all()->pluck('id')->toArray());
@@ -106,8 +108,24 @@ class WorkspaceController extends Controller
 
         $workspace->update($validator);
 
+        DB::commit();
 
-        foreach ($request["users"] as $user) {
+        return new WorkspaceResource($workspace);
+    }
+
+    public function updateUsers(MemberChangeRequest $request, Workspace $workspace)
+    {
+        if (!self::hasPermission($workspace, 'edit')) {
+            return response()->json(["You don't have access to edit the workspace: \"{$workspace->name}\""], 403);
+        }
+
+        $validator = $request->validated();
+
+        $currentUsersIds = $workspace->workspaceUsers->pluck("id")->toArray();
+        $usersToKeep = array();
+
+
+        foreach ($validator["users"] as $user) {
 
             $existingUser = User::where('email', $user["email"])->first();
             if (is_null($existingUser)) {
@@ -127,6 +145,7 @@ class WorkspaceController extends Controller
                     "user_id" => $existingUser->id
                 ]
             );
+            array_push($usersToKeep, $workspaceUser->id);
 
             $workspaceUser->permissions()->detach();
 
@@ -143,9 +162,11 @@ class WorkspaceController extends Controller
             $workspaceUser->permissions()->attach($permissionsToAdd);
         }
 
-        DB::commit();
+        $idsToRemove = array_diff($currentUsersIds, $usersToKeep);
 
-        return new WorkspaceResource($workspace);
+        WorkspaceUser::whereIn('id', $idsToRemove)->delete();
+
+        return new WorkspaceResource($workspace->fresh());
     }
 
     /**
@@ -156,6 +177,11 @@ class WorkspaceController extends Controller
      */
     public function destroy(Workspace $workspace)
     {
+        if (!self::hasPermission($workspace, 'edit')) {
+            return response()->json(["You don't have access to edit the workspace: \"{$workspace->name}\""], 403);
+        }
+
+        $workspace->workspaceUsers()->delete();
         $workspace->delete();
 
         return response()->json(null, 204);

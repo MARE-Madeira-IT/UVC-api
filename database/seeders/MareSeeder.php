@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 
-use App\Models\Density;
 use App\Models\Depth;
 use App\Models\SurveyProgramFunction;
 use App\Models\Indicator;
@@ -1379,16 +1378,6 @@ class MareSeeder extends Seeder
 
         foreach ($sizeCategories as $sizeCategory) {
             SizeCategory::create($sizeCategory);
-        }
-
-        $densities = [
-            ['name' => '0-25'],
-            ['name' => '25-50'],
-            ['name' => '0-50'],
-        ];
-
-        foreach ($densities as $density) {
-            Density::create($density);
         }
 
         $teamFunctions = [

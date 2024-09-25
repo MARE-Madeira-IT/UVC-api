@@ -31,7 +31,7 @@ class WorkspaceUserResource extends JsonResource
             'workspace' => [
                 "name" => $this->workspace->name
             ],
-            'permissions' => $this->permissions
+            'permissions' => $this->permissions,
         ];
     }
 }

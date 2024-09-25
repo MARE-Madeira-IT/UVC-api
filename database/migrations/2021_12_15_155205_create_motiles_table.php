@@ -24,6 +24,7 @@ class CreateMotilesTable extends Migration
             $table->double('density/1', 5, 2)->nullable();
             $table->double('biomass/1', 5, 2)->nullable();
             $table->timestamps();
+            $table->softDeletes();
 
             $table->foreign('taxa_id')->references('id')->on('taxas')->onDelete('cascade');
             $table->foreign('size_category_id')->references('id')->on('size_categories')->onDelete('cascade');

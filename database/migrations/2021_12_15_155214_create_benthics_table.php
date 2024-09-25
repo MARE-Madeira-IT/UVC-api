@@ -21,6 +21,7 @@ class CreateBenthicsTable extends Migration
             $table->unsignedBigInteger('report_id');
             $table->unsignedBigInteger('taxa_id')->nullable();
             $table->timestamps();
+            $table->softDeletes();
 
             $table->foreign('substrate_id')->references('id')->on('substrates')->onDelete('cascade');
             $table->foreign('report_id')->references('id')->on('reports')->onDelete('cascade');

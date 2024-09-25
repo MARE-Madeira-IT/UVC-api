@@ -6,7 +6,9 @@ use App\Http\QueryFilters\ProjectUserFilters;
 use App\Http\Resources\ProjectUserResource;
 use App\Models\Permission;
 use App\Models\ProjectUser;
+use App\Models\SurveyProgramUser;
 use App\Models\User;
+use App\Models\WorkspaceUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -68,6 +70,34 @@ class ProjectUserController extends Controller
                     'active' => true,
                     'accepted' => true,
                 ]);
+
+                foreach ($projectUser->project->surveyPrograms as $surveyProgram) {
+                    SurveyProgramUser::updateOrCreate(
+                        [
+                            'user_id' => Auth::id(),
+                            'survey_program_id' => $surveyProgram->id,
+                        ],
+                        [
+                            'user_id' => Auth::id(),
+                            'survey_program_id' => $surveyProgram->id,
+                            'accepted' => true,
+                            'active' => true,
+                        ]
+                    );
+                }
+
+                WorkspaceUser::updateOrCreate(
+                    [
+                        'user_id' => Auth::id(),
+                        'workspace_id' => $projectUser->project->workspace->id,
+                    ],
+                    [
+                        'user_id' => Auth::id(),
+                        'workspace_id' => $projectUser->project->workspace->id,
+                        'accepted' => true,
+                        'active' => true,
+                    ]
+                );
             }
         }
 

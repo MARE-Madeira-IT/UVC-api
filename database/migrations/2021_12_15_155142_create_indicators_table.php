@@ -19,6 +19,7 @@ class CreateIndicatorsTable extends Migration
             $table->enum('type', ["number", "text", "select"]);
             $table->unsignedBigInteger('survey_program_id');
             $table->timestamps();
+            $table->softDeletes();
 
             $table->unique(["name", "survey_program_id"]);
 

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('indicator_id')->nullable();
             $table->string("name");
             $table->timestamps();
+            $table->softDeletes();
 
 
             $table->foreign('indicator_id')->references('id')->on('indicators')->onDelete('cascade');

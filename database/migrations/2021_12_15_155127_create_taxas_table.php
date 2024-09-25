@@ -22,6 +22,7 @@ class CreateTaxasTable extends Migration
             $table->unsignedBigInteger('survey_program_id');
             $table->unsignedBigInteger('category_id');
             $table->timestamps();
+            $table->softDeletes();
 
             $table->unique(['survey_program_id', 'name']);
 

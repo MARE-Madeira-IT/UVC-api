@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\QueryFilters\WorkspaceUserFilters;
 use App\Http\Resources\WorkspaceUserResource;
 use App\Models\Permission;
+use App\Models\ProjectUser;
+use App\Models\SurveyProgramUser;
 use App\Models\User;
 use App\Models\WorkspaceUser;
 use Illuminate\Http\Request;
@@ -68,10 +70,40 @@ class WorkspaceUserController extends Controller
                     'active' => true,
                     'accepted' => true,
                 ]);
+
+                foreach ($workspaceUser->workspace->projects as $project) {
+                    ProjectUser::updateOrCreate(
+                        [
+                            'user_id' => Auth::id(),
+                            'project_id' => $project->id,
+                        ],
+                        [
+                            'user_id' => Auth::id(),
+                            'project_id' => $project->id,
+                            'accepted' => true,
+                            'active' => true,
+                        ]
+                    );
+
+                    foreach ($project->surveyPrograms as $surveyProgram) {
+                        SurveyProgramUser::updateOrCreate(
+                            [
+                                'user_id' => Auth::id(),
+                                'survey_program_id' => $surveyProgram->id,
+                            ],
+                            [
+                                'user_id' => Auth::id(),
+                                'survey_program_id' => $surveyProgram->id,
+                                'accepted' => true,
+                                'active' => true,
+                            ]
+                        );
+                    }
+                }
             }
         }
 
-        return WorkspaceUser::where('user_id', Auth::id())->where('accepted', false)->with('workspace')->get();
+        return response()->json(["message" => "Accepted successfully"], 200);
     }
 
     public function update(WorkspaceUser $workspaceUser, Request $request)

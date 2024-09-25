@@ -18,10 +18,10 @@ class CreateReportMotilesTable extends Migration
             $table->string('type');
             $table->unsignedBigInteger('report_id');
 
-
             $table->foreign('report_id')->references('id')->on('reports')->onDelete('cascade');
 
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -34,7 +34,8 @@ class CreateReportsTable extends Migration
             $table->integer('surveyed_area');
 
             $table->timestamps();
-
+            $table->softDeletes();
+            
             $table->foreign('survey_program_id')->references('id')->on('survey_programs')->onDelete('cascade');
             $table->foreign('site_id')->references('id')->on('sites')->onDelete('cascade');
             $table->foreign('depth_id')->references('id')->on('depths')->onDelete('cascade');

@@ -65,4 +65,12 @@ class ProjectFilters extends QueryFilters
     {
         $this->query->whereIn('workspace_id', $ids);
     }
+
+    public function search($string)
+    {
+        $this->query->where(function ($query) use ($string) {
+            $query->where('name', 'like', '%' . $string . '%')
+                ->orWhere('description', 'like', '%' . $string . '%');
+        });
+    }
 }
