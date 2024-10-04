@@ -10,7 +10,7 @@ class Depth extends Model
 {
     use FiltersRecords, SoftDeletes;
 
-    protected $fillable = ['name', 'survey_program_id'];
+    protected $fillable = ['name', 'survey_program_id', 'code'];
 
 
     public function reports()

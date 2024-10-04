@@ -114,58 +114,6 @@ class MareSeeder extends Seeder
 
                 ]
             ],
-            [
-                'name' => 'trophic guild 1',
-                'survey_program_id' => $surveyProgram->id,
-                'type' => 'select',
-                'values' => [
-                    "inv",
-                    "grazer",
-                    "omnivorous detritivores",
-                    "he",
-                    "cnidaris or sponges",
-                    "opportunistic feeder, exhibiting both carnivory and scavenging",
-                    "omnivorous scavenger",
-                    "detritivorous",
-                    "Predator/Scavenger",
-                    "filter feeders",
-                    "Mobile carnivorous species "
-                ]
-            ],
-            [
-                'name' => 'trophic guild 2',
-                'survey_program_id' => $surveyProgram->id,
-                'type' => 'select',
-                'values' => [
-                    "Predator-omnivorous, polytrophic",
-                    "Grazer-mostly herviborous",
-                    "Predator-carnivorous",
-                    "Detritivore",
-                    "Grazer - mostly herviborous",
-                    "Grazer-carnivorous",
-                    "Polytrophic-planktivore and symbiosis with zooxanthellae",
-                    "Grazer-herviborous",
-                    "Filter feeder-planktivore ",
-                    "Detritivore-herbivorous",
-
-                ]
-            ],
-            [
-                'name' => 'trophic guild 3',
-                'survey_program_id' => $surveyProgram->id,
-                'type' => 'select',
-                'values' => [
-                    "Invertivore",
-                    "Grazer",
-                    "Detritivore",
-                    "Herbivore",
-                    "Scavenger",
-                    "Zooplanktivore",
-                    "Planktivore",
-                    "Macro-carnivore",
-                    "Omnivore",
-                ]
-            ],
             ['name' => 'group', 'survey_program_id' => $surveyProgram->id, 'type' => 'select', 'values' => [
                 'fish',
                 'cnidaria',
@@ -228,10 +176,10 @@ class MareSeeder extends Seeder
         //     TrophicGuild::create($trophicGuild);
         // }
 
-        ## macroinv, fish, litter ....
+        ## macroinvertebrates, fish, litter ....
         $categories = [
             [
-                'macroinv',
+                'Macroinvertebrate',
                 [
                     [
                         'name' => 'Pachymatisma johnstonia',
@@ -743,7 +691,7 @@ class MareSeeder extends Seeder
                 ]
             ],
             [
-                'substrate',
+                'Substrate',
                 [
                     [
                         'name' => 'Rubble',
@@ -768,7 +716,7 @@ class MareSeeder extends Seeder
                 ],
             ],
             [
-                'algae',
+                'Algae',
                 [
                     [
                         'name' => 'Lithophyllum sp.',
@@ -1018,7 +966,7 @@ class MareSeeder extends Seeder
                 ]
             ],
             [
-                'fish',
+                'Fish',
                 [
                     [
                         'name' => 'Abudefduf luridus',
@@ -1314,7 +1262,7 @@ class MareSeeder extends Seeder
                 ]
             ],
             [
-                'litter',
+                'Litter',
                 [
                     ['name' => 'Plastic'],
                     ['name' => 'Rubber'],
@@ -1326,7 +1274,7 @@ class MareSeeder extends Seeder
                 ]
             ],
             [
-                'other',
+                'Other',
                 [
                     [
                         'name' => 'Bare',
@@ -1394,9 +1342,9 @@ class MareSeeder extends Seeder
         }
 
         $depths = [
-            ['name' => '4-6 m', 'survey_program_id' => $surveyProgram->id],
-            ['name' => '9-11 m', 'survey_program_id' => $surveyProgram->id],
-            ['name' => '19-21 m', 'survey_program_id' => $surveyProgram->id],
+            ['code' => 1, 'name' => '4-6 m', 'survey_program_id' => $surveyProgram->id],
+            ['code' => 2, 'name' => '9-11 m', 'survey_program_id' => $surveyProgram->id],
+            ['code' => 3, 'name' => '19-21 m', 'survey_program_id' => $surveyProgram->id],
         ];
 
         foreach ($depths as $depth) {

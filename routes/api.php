@@ -104,6 +104,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::put('surveyPrograms/{surveyProgram}/users', [SurveyProgramController::class, "updateUsers"]);
     Route::delete('surveyPrograms/{surveyProgram}', [SurveyProgramController::class, "destroy"]);
     Route::get('surveyPrograms/{surveyProgram}/permissions', [SurveyProgramController::class, "getSurveyProgramPermissions"]);
+    Route::get('surveyPrograms/importStatus/{id}', [SurveyProgramController::class, 'importStatus']);
 
     Route::get('projects', [ProjectController::class, "index"]);
     Route::post('projects', [ProjectController::class, "store"]);
@@ -169,7 +170,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('depths', [DepthController::class, "selector"]);
         Route::get('functions', [SurveyProgramFunctionController::class, "selector"]);
         Route::get('report-coordinates', FetchReportCoordinatesInvokable::class);
-        Route::get('taxa-categories', [TaxaController::class, "selector"]);
+        Route::get('taxas', [TaxaController::class, "selector"]);
         Route::get("workspaces", [WorkspaceController::class, "selector"]);
     });
 });

@@ -61,11 +61,11 @@ class MotileController extends Controller
             }
 
             if (isset($bIndicator)) {
-                $bValue = $bIndicator->pivot->name;
+                $biomass = $bValue = $bIndicator->pivot->name;
             }
 
             if (isset($aValue) && isset($bValue)) {
-                $aValue * pow($motile["size"], $bValue);
+                $density = $aValue * pow($motile["size"], $bValue);
             }
 
             if (isset($biomass)) {
@@ -133,7 +133,6 @@ class MotileController extends Controller
             if (isset($bIndicator)) {
                 $bValue = $bIndicator->pivot->name;
             }
-
 
             $biomass = isset($aValue) && isset($bValue) ? $aValue * pow($motile["size"], $bValue) : "N/A";
             $density = isset($biomass) ? $motile["ntotal"] / $mareReportMotile->report->surveyed_area : "N/A";

@@ -33,6 +33,7 @@ class MemberChangeRequest extends FormRequest
             'users.*.create' => 'sometimes|boolean',
             'users.*.edit' => 'sometimes|boolean',
             'users.*.show' => 'sometimes|boolean',
+            'users.*.admin' => 'sometimes|boolean',
         ];
     }
 

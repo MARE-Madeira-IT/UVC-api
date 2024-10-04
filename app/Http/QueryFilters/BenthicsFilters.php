@@ -10,7 +10,7 @@ use Cerbero\QueryFilters\QueryFilters;
  */
 class BenthicsFilters extends QueryFilters
 {
-    public function survey_program($id)
+    public function surveyProgram($id)
     {
         $this->query->where('survey_program_id', $id);
     }

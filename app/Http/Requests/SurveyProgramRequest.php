@@ -33,6 +33,7 @@ class SurveyProgramRequest extends FormRequest
             'project_id' => 'required|integer|exists:projects,id',
             'name' => 'required|string',
             'description' => 'required|string',
+            'file' => 'sometimes|file',
         ];
     }
 

@@ -15,10 +15,14 @@ class CreateDepthsTable extends Migration
     {
         Schema::create('depths', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique();
+            $table->integer('code');
+            $table->string('name');
             $table->unsignedBigInteger('survey_program_id');
             $table->timestamps();
 
+
+            $table->unique(['survey_program_id', 'name']);
+            $table->unique(['survey_program_id', 'code']);
             $table->foreign('survey_program_id')->references('id')->on('survey_programs')->onDelete('cascade');
             $table->softDeletes();
         });

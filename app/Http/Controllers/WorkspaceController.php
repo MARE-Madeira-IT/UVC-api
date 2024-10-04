@@ -98,7 +98,7 @@ class WorkspaceController extends Controller
      */
     public function update(WorkspaceRequest $request, Workspace $workspace)
     {
-        if (!self::hasPermission($workspace, 'edit')) {
+        if (!self::hasPermission($workspace, 'admin')) {
             return response()->json(["You don't have access to edit the workspace: \"{$workspace->name}\""], 403);
         }
 
@@ -115,7 +115,7 @@ class WorkspaceController extends Controller
 
     public function updateUsers(MemberChangeRequest $request, Workspace $workspace)
     {
-        if (!self::hasPermission($workspace, 'edit')) {
+        if (!self::hasPermission($workspace, 'admin')) {
             return response()->json(["You don't have access to edit the workspace: \"{$workspace->name}\""], 403);
         }
 
@@ -154,6 +154,10 @@ class WorkspaceController extends Controller
                 array_push($permissionsToAdd, Permission::where('name', 'create')->first()->id);
             }
 
+            if (array_key_exists("admin", $user) && $user["admin"]) {
+                array_push($permissionsToAdd, Permission::where('name', 'admin')->first()->id);
+            }
+
             if (array_key_exists("edit", $user) && $user["edit"]) {
                 array_push($permissionsToAdd, Permission::where('name', 'edit')->first()->id);
                 array_push($permissionsToAdd, Permission::where('name', 'delete')->first()->id);
@@ -177,7 +181,7 @@ class WorkspaceController extends Controller
      */
     public function destroy(Workspace $workspace)
     {
-        if (!self::hasPermission($workspace, 'edit')) {
+        if (!self::hasPermission($workspace, 'admin')) {
             return response()->json(["You don't have access to edit the workspace: \"{$workspace->name}\""], 403);
         }
 

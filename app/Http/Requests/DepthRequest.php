@@ -30,7 +30,7 @@ class DepthRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string',
+            'name' => 'required|string|unique:depths,name',
             'survey_program_id' => 'required|integer|exists:survey_programs,id',
         ];
     }

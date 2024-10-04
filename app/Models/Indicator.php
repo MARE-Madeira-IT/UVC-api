@@ -13,7 +13,7 @@ class Indicator extends Model
 
     protected $fillable = [
         "name",
-        "type",
+        "type", //"number", "text", "select"
         "survey_program_id"
     ];
 

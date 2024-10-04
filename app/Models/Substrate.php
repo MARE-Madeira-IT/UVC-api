@@ -12,11 +12,6 @@ class Substrate extends Model
 
     protected $fillable = ['name'];
 
-    public function reports()
-    {
-        return $this->belongsToMany(Report::class, 'report_has_substrates');
-    }
-
     public function benthics()
     {
         return $this->hasMany(Benthic::class);

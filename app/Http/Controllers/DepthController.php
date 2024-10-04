@@ -36,7 +36,13 @@ class DepthController extends Controller
     {
         $validator = $request->validated();
 
-        $newEntry = Depth::create($validator);
+        $lastDepth = Depth::where("survey_program_id", $validator["survey_program_id"])->max("code");
+
+        $newEntry = Depth::create([
+            "name" => $validator["name"],
+            "survey_program_id" => $validator["survey_program_id"],
+            "code" => $lastDepth ? $lastDepth + 1 : 1
+        ]);
 
         return new DepthResource($newEntry);
     }

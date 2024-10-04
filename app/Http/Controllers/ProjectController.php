@@ -94,7 +94,7 @@ class ProjectController extends Controller
      */
     public function update(ProjectRequest $request, Project $project)
     {
-        if (!self::hasPermission($project, 'edit')) {
+        if (!self::hasPermission($project, 'admin')) {
             return response()->json(["You don't have access to edit the project: \"{$project->name}\""], 403);
         }
         DB::beginTransaction();
@@ -109,7 +109,7 @@ class ProjectController extends Controller
 
     public function updateUsers(MemberChangeRequest $request, Project $project)
     {
-        if (!self::hasPermission($project, 'edit')) {
+        if (!self::hasPermission($project, 'admin')) {
             return response()->json(["You don't have access to edit the project: \"{$project->name}\""], 403);
         }
 
@@ -147,6 +147,9 @@ class ProjectController extends Controller
             if (array_key_exists("create", $user) && $user["create"]) {
                 array_push($permissionsToAdd, Permission::where('name', 'create')->first()->id);
             }
+            if (array_key_exists("admin", $user) && $user["admin"]) {
+                array_push($permissionsToAdd, Permission::where('name', 'admin')->first()->id);
+            }
 
             if (array_key_exists("edit", $user) && $user["edit"]) {
                 array_push($permissionsToAdd, Permission::where('name', 'edit')->first()->id);
@@ -171,7 +174,7 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
-        if (!self::hasPermission($project, 'edit')) {
+        if (!self::hasPermission($project, 'admin')) {
             return response()->json(["You don't have access to edit the project: \"{$project->name}\""], 403);
         }
 

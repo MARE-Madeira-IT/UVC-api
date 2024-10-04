@@ -4,21 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Exports\SurveyProgramExport;
 use App\Http\Controllers\Controller;
-use App\Http\QueryFilters\MemberFilters;
 use App\Http\QueryFilters\SurveyProgramFilters;
-use App\Http\QueryFilters\UserFilters;
 use App\Http\Requests\MemberChangeRequest;
 use App\Http\Requests\SurveyProgramRequest;
 use App\Http\Resources\SurveyProgramResource;
-use App\Http\Resources\SurveyProgramUserResource;
-use App\Http\Resources\UserResource;
-use App\Models\SurveyProgramFunction;
+use App\Imports\SurveyProgramImport;
 use App\Models\Permission;
 use App\Models\SurveyProgram;
 use App\Models\SurveyProgramUser;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class SurveyProgramController extends Controller
 {
@@ -64,18 +61,52 @@ class SurveyProgramController extends Controller
     {
         $validator = $request->validated();
 
-        $surveyProgram = SurveyProgram::create($validator);
+        DB::beginTransaction();
+        $surveyProgram = SurveyProgram::create([...$validator, "uploading" => true]);
 
-        $mareSurveyProgramUser = SurveyProgramUser::create([
+        $surveyProgramUser = SurveyProgramUser::create([
             'survey_program_id' => $surveyProgram->id,
             'user_id' => Auth::id(),
             'active' => 1,
             'accepted' => 1,
         ]);
 
-        $mareSurveyProgramUser->permissions()->attach(Permission::all()->pluck('id')->toArray());
+        $surveyProgramUser->permissions()->attach(Permission::all()->pluck('id')->toArray());
 
+        if ($request->file("file")) {
+            cache()->forever("start_date_{$surveyProgram->id}", now());
+            Excel::queueImport(new SurveyProgramImport($surveyProgram), $request->file("file"), null, \Maatwebsite\Excel\Excel::XLSX);
+        }
+        DB::commit();
         return new SurveyProgramResource($surveyProgram);
+    }
+
+    public function importStatus($id)
+    {
+        return response()->json([
+            "DIVE_SITE_METADATA" => [
+                "current_row" => cache("current_row_DIVE_SITE_METADATA_$id"),
+                "total_rows" => cache("total_rows_DIVE_SITE_METADATA_$id"),
+            ],
+            "BENTHIC_TAXAS" => [
+                "current_row" => cache("current_row_BENTHIC_TAXAS_$id"),
+                "total_rows" => cache("total_rows_BENTHIC_TAXAS_$id"),
+            ],
+            "MOTILE_TAXAS" => [
+                "current_row" => cache("current_row_MOTILE_TAXAS_$id"),
+                "total_rows" => cache("total_rows_MOTILE_TAXAS_$id"),
+            ],
+            "BENTHIC_DB" => [
+                "current_row" => cache("current_row_BENTHIC_DB_$id"),
+                "total_rows" => cache("total_rows_BENTHIC_DB_$id"),
+            ],
+            "MOTILE_DB" => [
+                "current_row" => cache("current_row_MOTILE_DB_$id"),
+                "total_rows" => cache("total_rows_MOTILE_DB_$id"),
+            ],
+            "errors" => cache("errors_DIVE_SITE_METADATA_{$id}"),
+            "start_date" => cache("start_date_{$id}"),
+        ], 200);
     }
 
     /**
@@ -99,7 +130,7 @@ class SurveyProgramController extends Controller
      */
     public function update(SurveyProgramRequest $request, SurveyProgram $surveyProgram)
     {
-        if (!self::hasPermission($surveyProgram, 'edit')) {
+        if (!self::hasPermission($surveyProgram, 'admin')) {
             return response()->json(["You don't have access to edit the survey program: \"{$surveyProgram->name}\""], 403);
         }
 
@@ -111,7 +142,7 @@ class SurveyProgramController extends Controller
 
     public function updateUsers(MemberChangeRequest $request, SurveyProgram $surveyProgram)
     {
-        if (!self::hasPermission($surveyProgram, 'edit')) {
+        if (!self::hasPermission($surveyProgram, 'admin')) {
             return response()->json(["You don't have access to edit the survey program: \"{$surveyProgram->name}\""], 403);
         }
 
@@ -149,6 +180,9 @@ class SurveyProgramController extends Controller
             if (array_key_exists("create", $user) && $user["create"]) {
                 array_push($permissionsToAdd, Permission::where('name', 'create')->first()->id);
             }
+            if (array_key_exists("admin", $user) && $user["admin"]) {
+                array_push($permissionsToAdd, Permission::where('name', 'admin')->first()->id);
+            }
 
             if (array_key_exists("edit", $user) && $user["edit"]) {
                 array_push($permissionsToAdd, Permission::where('name', 'edit')->first()->id);
@@ -173,7 +207,7 @@ class SurveyProgramController extends Controller
      */
     public function destroy(SurveyProgram $surveyProgram)
     {
-        if (!self::hasPermission($surveyProgram, 'edit')) {
+        if (!self::hasPermission($surveyProgram, 'admin')) {
             return response()->json(["You don't have access to edit the survey program: \"{$surveyProgram->name}\""], 403);
         }
 

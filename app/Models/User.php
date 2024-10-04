@@ -11,11 +11,9 @@ use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
-class User extends Authenticatable implements JWTSubject
+class User extends Authenticatable
 {
-    use Notifiable;
-    use FiltersRecords;
-    use HasRoles;
+    use Notifiable, FiltersRecords, HasRoles;
 
     protected $table = 'wave.users';
     protected $connection = 'mysql_wave';

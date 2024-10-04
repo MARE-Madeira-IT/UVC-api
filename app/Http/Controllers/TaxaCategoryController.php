@@ -21,9 +21,9 @@ class TaxaCategoryController extends Controller
         return TaxaCategoryResource::collection(TaxaCategory::filterBy($filters)->paginate(10));
     }
 
-    public function selector()
+    public function selector(TaxaCategoryFilters $filters)
     {
-        return TaxaCategoryResource::collection(TaxaCategory::all());
+        return TaxaCategoryResource::collection(TaxaCategory::filterBy($filters)->all());
     }
 
     /**

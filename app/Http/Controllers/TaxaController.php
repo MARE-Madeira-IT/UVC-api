@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helper;
 use App\Http\Controllers\Controller;
+use App\Http\QueryFilters\TaxaCategoryFilters;
 use App\Http\QueryFilters\TaxaFilters;
 use App\Http\Requests\TaxaPhotoRequest;
 use App\Http\Requests\TaxaRequest;
@@ -29,9 +30,9 @@ class TaxaController extends Controller
         return TaxaResource::collection(Taxa::filterBy($filters)->paginate(10));
     }
 
-    public function selector()
+    public function selector(TaxaCategoryFilters $filters)
     {
-        return TaxaCategoryFullResource::collection(TaxaCategory::with('taxas')->get());
+        return TaxaCategoryFullResource::collection(TaxaCategory::filterBy($filters)->with('taxas')->get());
     }
 
     /**
