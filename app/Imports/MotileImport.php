@@ -12,6 +12,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Concerns\OnEachRow;
 use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
+use Maatwebsite\Excel\Concerns\SkipsFailures;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
@@ -26,8 +27,6 @@ class MotileImport implements ToCollection, WithValidation, WithHeadingRow, Skip
         $this->surveyProgram = $surveyProgram;
         $this->sheetName = $sheetName;
     }
-
-
 
     public function onRow(Row $row)
     {
@@ -47,8 +46,8 @@ class MotileImport implements ToCollection, WithValidation, WithHeadingRow, Skip
             })],
             'size_category' => "nullable|exists:size_categories,name",
             'size' => "nullable|numeric",
+            'surveyed_area' => "nullable|in:100,200",
             'nTotal' => "nullable|integer",
-            'notes' => "nullable|string",
         ];
     }
 
@@ -63,12 +62,13 @@ class MotileImport implements ToCollection, WithValidation, WithHeadingRow, Skip
             "size_category.exists" => $this->sheetName . " (:row): The :attribute with value ':input' must be one of the following: " . implode(', ', SizeCategory::all()->pluck("name")->toArray()),
             "size.*" => $this->sheetName . " (:row): The :attribute must be a number",
             "nTotal.*" => $this->sheetName . " (:row): The :attribute must be a number",
+            "surveyed_area.*" => $this->sheetName . " (:row): The :attribute with value ':input' must be one of the following: 100 or 200",
         ];
     }
 
     public function isEmptyWhen(array $row): bool
     {
-        return $row['sample'] == null;
+        return array_key_exists("sample", $row) ? $row['sample'] == null : false;
     }
 
     /**
@@ -94,6 +94,10 @@ class MotileImport implements ToCollection, WithValidation, WithHeadingRow, Skip
             $report = Report::where("code", $sampleName)
                 ->where('survey_program_id', $surveyProgram->id)
                 ->first();
+
+            $report->update([
+                "surveyed_area" => $row["surveyed_area"]
+            ]);
 
             $reportMotile = ReportMotile::updateOrCreate([
                 "report_id" => $report->id,

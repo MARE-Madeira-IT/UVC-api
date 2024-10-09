@@ -10,6 +10,7 @@ use App\Models\ReportHasFunction;
 use App\Models\Site;
 use App\Models\SurveyProgram;
 use App\Models\SurveyProgramFunction;
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\OnEachRow;
 use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
@@ -26,6 +27,11 @@ class DiveMetadataImport implements ToCollection, WithValidation, WithHeadingRow
     {
         $this->surveyProgram = $surveyProgram;
         $this->sheetName = $sheetName;
+    }
+
+    public function isEmptyWhen(array $row): bool
+    {
+        return array_key_exists("date", $row) ? $row['date'] == null : false;
     }
 
     public function onRow(Row $row)
@@ -53,7 +59,7 @@ class DiveMetadataImport implements ToCollection, WithValidation, WithHeadingRow
             'heading' => 'nullable|integer',
             'heading_direction' => 'nullable|string',
             'site_area' => 'nullable',
-            'distance' => 'nullable',
+            'distance' => 'nullable|decimal:0,9',
         ];
     }
 
@@ -69,12 +75,14 @@ class DiveMetadataImport implements ToCollection, WithValidation, WithHeadingRow
             "transect.*" => $this->sheetName . " (:row): The :attribute is required",
             "depth_category.*" => $this->sheetName . " (:row): The :attribute is required",
             "depth.*" => $this->sheetName . " (:row): The :attribute is required",
-            "time.*" => $this->sheetName . " (:row): The :attribute is required",
+            "time.required" => $this->sheetName . " (:row): The :attribute is required",
+            "time.integer" => $this->sheetName . " (:row): The :attribute with value ':input' must be an integer",
             "replica.*" => $this->sheetName . " (:row): The :attribute is required",
             "latitude.*" => $this->sheetName . " (:row): The :attribute is not valid",
             "longitude.*" => $this->sheetName . " (:row): The :attribute is not valid",
             "heading.*" => $this->sheetName . " (:row): The :attribute is not valid",
             "heading_direction.*" => $this->sheetName . " (:row): The :attribute is not valid",
+            "distance.*" => $this->sheetName . " (:row): The :attribute with valur ':input' must be a number with :min-:max decimal places",
         ];
     }
 
@@ -147,7 +155,7 @@ class DiveMetadataImport implements ToCollection, WithValidation, WithHeadingRow
                 "survey_program_id" => $surveyProgram->id,
                 "time" => $row['time'],
                 "code" => $code,
-                "date" => $row['date'],
+                "date" => Carbon::createFromFormat("Ymd", $row['date']),
                 'transect' => $row['transect'],
                 'daily_dive' => $row['daily_dive'],
                 'replica' => $row['replica'],

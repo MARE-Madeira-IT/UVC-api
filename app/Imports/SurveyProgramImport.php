@@ -4,6 +4,7 @@ namespace App\Imports;
 
 use App\Models\SurveyProgram;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Maatwebsite\Excel\Concerns\WithBatchInserts;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithMultipleSheets;
@@ -11,13 +12,18 @@ use Maatwebsite\Excel\Events\AfterImport;
 use Maatwebsite\Excel\Events\BeforeImport;
 use Maatwebsite\Excel\Events\ImportFailed;
 
-class SurveyProgramImport implements WithMultipleSheets, WithEvents, ShouldQueue, WithChunkReading
+class SurveyProgramImport implements WithMultipleSheets, WithEvents, ShouldQueue, WithChunkReading, WithBatchInserts
 {
     private $surveyProgram, $sheets;
 
     public function chunkSize(): int
     {
-        return 100;
+        return 400;
+    }
+
+    public function batchSize(): int
+    {
+        return 400;
     }
 
     function __construct(SurveyProgram $surveyProgram)
@@ -82,7 +88,9 @@ class SurveyProgramImport implements WithMultipleSheets, WithEvents, ShouldQueue
 
                     cache(["errors_DIVE_SITE_METADATA_{$this->surveyProgram->id}" => $errors], now()->addMinutes(60));
                 } else {
-                    throw $event->getException();
+                    $exception = $event->getException();
+                    logger($exception);
+                    cache(["errors_DIVE_SITE_METADATA_{$this->surveyProgram->id}" => [$exception->getMessage() . " on " . $exception->getFile() . ':' . $exception->getLine()]], now()->addMinutes(60));
                 }
             },
         ];

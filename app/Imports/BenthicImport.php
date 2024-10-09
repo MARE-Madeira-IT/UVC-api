@@ -7,16 +7,18 @@ use App\Models\Report;
 use App\Models\Substrate;
 use App\Models\SurveyProgram;
 use App\Models\Taxa;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Collection;
 use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Concerns\OnEachRow;
 use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
+use Maatwebsite\Excel\Concerns\SkipsOnFailure;
 use Maatwebsite\Excel\Concerns\ToCollection;
-use Maatwebsite\Excel\Concerns\WithChunkReading;
+use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
+use Maatwebsite\Excel\Events\AfterImport;
 use Maatwebsite\Excel\Row;
+use Maatwebsite\Excel\Validators\Failure;
 
 class BenthicImport implements ToCollection, WithValidation, WithHeadingRow, SkipsEmptyRows, OnEachRow
 {
@@ -30,7 +32,7 @@ class BenthicImport implements ToCollection, WithValidation, WithHeadingRow, Ski
 
     public function isEmptyWhen(array $row): bool
     {
-        return $row['sample'] == null;
+        return array_key_exists("sample", $row) ? $row['sample'] == null : false;
     }
 
     public function onRow(Row $row)
@@ -49,7 +51,6 @@ class BenthicImport implements ToCollection, WithValidation, WithHeadingRow, Ski
             'taxa' => ["required", Rule::exists("taxas", "name")->where(function ($q) {
                 return $q->where('survey_program_id', $this->surveyProgram->id);
             })],
-            'notes' => "nullable|string",
             'substrate' => "required|exists:substrates,name",
         ];
     }
@@ -60,7 +61,7 @@ class BenthicImport implements ToCollection, WithValidation, WithHeadingRow, Ski
             "sample.exists" => $this->sheetName . " (:row): The :attribute with value ':input' doesn't exist on the 'DIVE_SITE_METADATA' sheet",
             "sample.required" => $this->sheetName . " (:row): The :attribute is required",
             "p.*" => $this->sheetName . " (:row): The :attribute with value ':input' must be an integer between 1 and 100 (inclusive)",
-            "taxa.exists" => $this->sheetName . " (:row): The :attribute with value ':input' doesn't exist on the 'MOTILE_TAXAS' sheet",
+            "taxa.exists" => $this->sheetName . " (:row): The :attribute with value ':input' doesn't exist on the 'BENTHIC_TAXAS' sheet",
             "taxa.required" => $this->sheetName . " (:row): The :attribute is required",
             "substrate.exists" => $this->sheetName . " (:row): The :attribute with value ':input' must be one of the following: " . implode(', ', Substrate::all()->pluck("name")->toArray()),
             "substrate.required" => $this->sheetName . " (:row): The :attribute is required",
@@ -98,7 +99,7 @@ class BenthicImport implements ToCollection, WithValidation, WithHeadingRow, Ski
             $benthicData[] = [
                 "report_id" => $report->id,
                 "substrate_id" => $substrate->id,
-                "notes" => $row["notes"],
+                "notes" => array_key_exists("notes", $row) ? $row["notes"] : null,
                 "taxa_id" => $taxa->id,
                 "p##" => $row["p"],
             ];

@@ -31,10 +31,6 @@ class Report extends Model
         "surveyed_area",
     ];
 
-    protected $casts = [
-        "date" => "date",
-    ];
-
     public function benthics()
     {
         return $this->hasMany(Benthic::class, 'report_id');

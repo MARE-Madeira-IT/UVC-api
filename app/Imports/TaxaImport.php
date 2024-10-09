@@ -8,12 +8,12 @@ use App\Models\SurveyProgram;
 use App\Models\Taxa;
 use App\Models\TaxaCategory;
 use App\Models\TaxaHasIndicator;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\OnEachRow;
 use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
+use Maatwebsite\Excel\Concerns\SkipsFailures;
+use Maatwebsite\Excel\Concerns\SkipsOnFailure;
 use Maatwebsite\Excel\Concerns\ToCollection;
-use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Row;
@@ -35,11 +35,11 @@ class TaxaImport implements ToCollection, WithValidation, WithHeadingRow, SkipsE
     }
 
 
-
     public function rules(): array
     {
         return [
             'category' => "required|string|in:Macroinvertebrate,Substrate,Algae,Fish,Litter,Other",
+            'taxa' => 'required|string',
             'species' => 'required|string',
             'genus' => 'required|string',
             'phylum' => 'nullable|string'
@@ -52,12 +52,13 @@ class TaxaImport implements ToCollection, WithValidation, WithHeadingRow, SkipsE
             "category.*" => $this->sheetName . " (:row): The :attribute with value ':input' must be one of the following: Macroinvertebrate, Substrate, Algae, Fish, Litter, Other",
             "species.*" => $this->sheetName . " (:row): The :attribute is required",
             "genus.*" => $this->sheetName . " (:row): The :attribute is required",
+            "taxa.*" => $this->sheetName . " (:row): The :attribute is required",
         ];
     }
 
     public function isEmptyWhen(array $row): bool
     {
-        return $row['species'] == null;
+        return array_key_exists("taxa", $row) ? $row['taxa'] == null : false;
     }
 
     /**
@@ -103,10 +104,11 @@ class TaxaImport implements ToCollection, WithValidation, WithHeadingRow, SkipsE
 
             $taxa = Taxa::updateOrCreate([
                 'survey_program_id' => $surveyProgram->id,
-                'name' => array_key_exists("species", $row) ? $row["species"] : null,
+                'name' => array_key_exists("taxa", $row) ? $row["taxa"] : null,
             ], [
                 'survey_program_id' => $surveyProgram->id,
-                'name' => array_key_exists("species", $row) ?  $row["species"] : null,
+                'name' => array_key_exists("taxa", $row) ?  $row["taxa"] : null,
+                'species' => array_key_exists("species", $row) ?  $row["species"] : null,
                 'genus' => array_key_exists("genus", $row) ?  $row["genus"] : null,
                 'phylum' => array_key_exists("phylum", $row) ?  $row["phylum"] : null,
                 'category_id' => $taxaCategory->id,

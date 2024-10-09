@@ -13,9 +13,11 @@ use App\Models\Permission;
 use App\Models\SurveyProgram;
 use App\Models\SurveyProgramUser;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\HeadingRowImport;
 
 class SurveyProgramController extends Controller
 {
@@ -83,29 +85,59 @@ class SurveyProgramController extends Controller
 
     public function importStatus($id)
     {
+        $diveSiteMetadataStatus = [
+            "current_row" => cache("current_row_DIVE_SITE_METADATA_$id"),
+            "total_rows" => cache("total_rows_DIVE_SITE_METADATA_$id"),
+        ];
+
+        $benthicTaxasStatus = [
+            "current_row" => cache("current_row_BENTHIC_TAXAS_$id"),
+            "total_rows" => cache("total_rows_BENTHIC_TAXAS_$id"),
+        ];
+        $motileTaxasStatus = [
+            "current_row" => cache("current_row_MOTILE_TAXAS_$id"),
+            "total_rows" => cache("total_rows_MOTILE_TAXAS_$id"),
+        ];
+
+        $benthicStatus = [
+            "current_row" => cache("current_row_BENTHIC_DB_$id"),
+            "total_rows" => cache("total_rows_BENTHIC_DB_$id"),
+            "errors" => cache("errors_BENTHIC_{$id}")
+        ];
+        $motileStatus = [
+            "current_row" => cache("current_row_MOTILE_DB_$id"),
+            "total_rows" => cache("total_rows_MOTILE_DB_$id"),
+        ];
+
+        $rowsDone = $diveSiteMetadataStatus["current_row"] +
+            $benthicTaxasStatus["current_row"] +
+            $motileTaxasStatus["current_row"] +
+            $benthicStatus["current_row"] +
+            $motileStatus["current_row"];
+
+        $totalRows = $diveSiteMetadataStatus["total_rows"] +
+            $benthicTaxasStatus["total_rows"] +
+            $motileTaxasStatus["total_rows"] +
+            $benthicStatus["total_rows"] +
+            $motileStatus["total_rows"];
+
+
+        $start = cache("start_date_{$id}");
+        $elapsedTime = now()->diffInSeconds($start, true);
+
+        $estimatedTotalTime = $rowsDone ? $totalRows * $elapsedTime / $rowsDone : null;
+
+        $predictedEnd = $rowsDone ? Carbon::parse($start)->addSeconds($estimatedTotalTime) : null;
+
         return response()->json([
-            "DIVE_SITE_METADATA" => [
-                "current_row" => cache("current_row_DIVE_SITE_METADATA_$id"),
-                "total_rows" => cache("total_rows_DIVE_SITE_METADATA_$id"),
-            ],
-            "BENTHIC_TAXAS" => [
-                "current_row" => cache("current_row_BENTHIC_TAXAS_$id"),
-                "total_rows" => cache("total_rows_BENTHIC_TAXAS_$id"),
-            ],
-            "MOTILE_TAXAS" => [
-                "current_row" => cache("current_row_MOTILE_TAXAS_$id"),
-                "total_rows" => cache("total_rows_MOTILE_TAXAS_$id"),
-            ],
-            "BENTHIC_DB" => [
-                "current_row" => cache("current_row_BENTHIC_DB_$id"),
-                "total_rows" => cache("total_rows_BENTHIC_DB_$id"),
-            ],
-            "MOTILE_DB" => [
-                "current_row" => cache("current_row_MOTILE_DB_$id"),
-                "total_rows" => cache("total_rows_MOTILE_DB_$id"),
-            ],
+            "DIVE_SITE_METADATA" => $diveSiteMetadataStatus,
+            "BENTHIC_TAXAS" => $benthicTaxasStatus,
+            "MOTILE_TAXAS" => $motileTaxasStatus,
+            "BENTHIC_DB" => $benthicStatus,
+            "MOTILE_DB" => $motileStatus,
             "errors" => cache("errors_DIVE_SITE_METADATA_{$id}"),
-            "start_date" => cache("start_date_{$id}"),
+            "start_date" => $start,
+            "predicted_end" => $predictedEnd,
         ], 200);
     }
 
