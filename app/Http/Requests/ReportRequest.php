@@ -7,6 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class ReportRequest extends FormRequest
 {
@@ -35,7 +36,9 @@ class ReportRequest extends FormRequest
             'site_id' => 'required|exists:sites,id',
             'depth_id' => 'integer|exists:depths,id',
             'survey_program_id' => 'integer|exists:survey_programs,id',
-            'code' => 'required|string',
+            'code' => ['required', 'string', Rule::unique('reports', 'code')->where(function ($query) {
+                $query->where('survey_program_id', $this->surveyProgram->id);
+            })],
             'date' => 'required|date',
             'transect' => 'required|integer',
             'replica' => 'required|integer',

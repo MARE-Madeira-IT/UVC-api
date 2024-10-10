@@ -10,6 +10,7 @@ use App\Http\Resources\ReportResource;
 use App\Models\Report;
 use App\Models\ReportHasFunction;
 use App\Models\Site;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 
@@ -43,7 +44,7 @@ class ReportController extends Controller
             "survey_program_id" => $validator["survey_program_id"],
             "time" => $validator["time"],
             "code" => $validator["code"],
-            "date" => $validator["date"],
+            "date" => Carbon::parse($validator["date"]),
             "transect" => $validator["transect"],
             "daily_dive" => $validator["daily_dive"],
             "replica" => $validator["replica"],

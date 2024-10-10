@@ -18,12 +18,12 @@ class DepthController extends Controller
      */
     public function index(DepthFilters $filters)
     {
-        return DepthResource::collection(Depth::filterBy($filters)->paginate(10));
+        return DepthResource::collection(Depth::orderBy("code")->filterBy($filters)->paginate(10));
     }
 
-    public function selector()
+    public function selector(DepthFilters $filters)
     {
-        return DepthResource::collection(Depth::all());
+        return DepthResource::collection(Depth::orderBy("code")->filterBy($filters)->get());
     }
 
     /**
