@@ -32,6 +32,11 @@ class Taxa extends Model
         return $this->hasMany(Benthic::class);
     }
 
+    public function motiles()
+    {
+        return $this->hasMany(Motile::class);
+    }
+
     public function surveyProgram()
     {
         return $this->belongsTo(SurveyProgram::class);

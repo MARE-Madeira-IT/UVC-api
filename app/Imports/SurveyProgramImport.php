@@ -12,18 +12,13 @@ use Maatwebsite\Excel\Events\AfterImport;
 use Maatwebsite\Excel\Events\BeforeImport;
 use Maatwebsite\Excel\Events\ImportFailed;
 
-class SurveyProgramImport implements WithMultipleSheets, WithEvents, ShouldQueue, WithChunkReading, WithBatchInserts
+class SurveyProgramImport implements WithMultipleSheets, WithEvents, ShouldQueue, WithChunkReading
 {
     private $surveyProgram, $sheets;
 
     public function chunkSize(): int
     {
-        return 400;
-    }
-
-    public function batchSize(): int
-    {
-        return 400;
+        return 1000;
     }
 
     function __construct(SurveyProgram $surveyProgram)

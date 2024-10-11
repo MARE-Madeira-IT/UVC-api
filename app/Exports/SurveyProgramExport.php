@@ -2,11 +2,16 @@
 
 namespace App\Exports;
 
+use App\Exports\Sheets\BenthicDBSheet;
 use App\Exports\Sheets\BenthicSheet;
+use App\Exports\Sheets\BenthicTaxasSheet;
 use App\Exports\Sheets\DepthSheet;
+use App\Exports\Sheets\DiveSiteMetadataSheet;
 use App\Exports\Sheets\SurveyProgramFunctionSheet;
 use App\Exports\Sheets\IndicatorSheet;
+use App\Exports\Sheets\MotileDBSheet;
 use App\Exports\Sheets\MotileSheet;
+use App\Exports\Sheets\MotileTaxasSheet;
 use App\Exports\Sheets\SiteSheet;
 use App\Exports\Sheets\SurveySheet;
 use App\Exports\Sheets\TaxaSheet;
@@ -21,7 +26,7 @@ class SurveyProgramExport implements WithMultipleSheets
 {
   use Exportable;
 
-  private $surveyProgram;
+  protected $surveyProgram;
 
   public function __construct($surveyProgram)
   {
@@ -31,27 +36,32 @@ class SurveyProgramExport implements WithMultipleSheets
   public function sheets(): array
   {
     $surveyProgram = $this->surveyProgram;
-    $motiles = Motile::whereHas('mareReportMotile', function ($query) use ($surveyProgram) {
-      return $query->whereHas('report', function ($query) use ($surveyProgram) {
-        return $query->where('survey_program_id', $surveyProgram->id);
-      })->orderBy('type', 'asc');
-    })->get();
+    // $motiles = Motile::whereHas('mareReportMotile', function ($query) use ($surveyProgram) {
+    //   return $query->whereHas('report', function ($query) use ($surveyProgram) {
+    //     return $query->where('survey_program_id', $surveyProgram->id);
+    //   })->orderBy('type', 'asc');
+    // })->get();
 
-    $benthics = Benthic::whereHas('report', function ($query) use ($surveyProgram) {
-      return $query->where('survey_program_id', $surveyProgram->id);
-    })->get();
+    // $benthics = Benthic::whereHas('report', function ($query) use ($surveyProgram) {
+    //   return $query->where('survey_program_id', $surveyProgram->id);
+    // })->get();
 
 
 
     return [
-      new SiteSheet($surveyProgram->localities),
-      new IndicatorSheet($surveyProgram->indicators),
-      new DepthSheet($surveyProgram->depths),
-      new SurveyProgramFunctionSheet($surveyProgram->functions),
-      new TaxaSheet($surveyProgram->taxas, $surveyProgram->indicators),
-      new SurveySheet($surveyProgram->reports, $this->surveyProgram->functions),
-      new MotileSheet($motiles),
-      new BenthicSheet($benthics),
+      new DiveSiteMetadataSheet($surveyProgram),
+      new BenthicDBSheet($surveyProgram),
+      new BenthicTaxasSheet($surveyProgram),
+      new MotileDBSheet($surveyProgram),
+      new MotileTaxasSheet($surveyProgram),
+      // new SiteSheet($surveyProgram->localities),
+      // new IndicatorSheet($surveyProgram->indicators),
+      // new DepthSheet($surveyProgram->depths),
+      // new SurveyProgramFunctionSheet($surveyProgram->functions),
+      // new TaxaSheet($surveyProgram->taxas, $surveyProgram->indicators),
+      // new SurveySheet($surveyProgram->reports, $this->surveyProgram->functions),
+      // new MotileSheet($motiles),
+      // new BenthicSheet($benthics),
     ];
   }
 }

@@ -12,7 +12,6 @@ use App\Models\SurveyProgram;
 use App\Models\SurveyProgramFunction;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
-use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Concerns\OnEachRow;
 use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\ToCollection;
@@ -45,8 +44,9 @@ class DiveMetadataImport implements ToCollection, WithValidation, WithHeadingRow
     {
         $code = $row["locality_code"] . '_' . $row["site_code"] . '_Time' . $row["time"] . '_D' . $row["depth"] . '_R' . $row["replica"];
 
-        $row["code"] = $code;
-        return $row;
+        $data = ["code" => $code, ...$row];
+
+        return $data;
     }
 
     public function rules(): array
@@ -56,9 +56,6 @@ class DiveMetadataImport implements ToCollection, WithValidation, WithHeadingRow
                 'sometimes',
                 'string',
                 'distinct',
-                Rule::unique('reports', 'code')->where(function ($query) {
-                    $query->where('survey_program_id', $this->surveyProgram->id);
-                })
             ],
             'date' => 'required|date_format:Ymd',
             'locality' => 'required|string',
@@ -100,7 +97,8 @@ class DiveMetadataImport implements ToCollection, WithValidation, WithHeadingRow
             "heading.*" => $this->sheetName . " (:row): The :attribute is not valid",
             "heading_direction.*" => $this->sheetName . " (:row): The :attribute is not valid",
             "distance.*" => $this->sheetName . " (:row): The :attribute with value ':input' must be a number",
-            "code.*" => $this->sheetName . " (:row): A sample with code ':input' already exists",
+            "code.distinct" => $this->sheetName . " (:row): A sample with code ':input' is duplicated in the file",
+            "code.unique" => $this->sheetName . " (:row): A sample with code ':input' already exists",
         ];
     }
 
