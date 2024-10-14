@@ -19,7 +19,7 @@ class CreateReportsTable extends Migration
             $table->date('date');
             $table->integer('transect');
             $table->integer('daily_dive');
-            $table->integer('time');
+            $table->float('time');
             $table->integer('replica');
             $table->decimal('latitude', 10, 7)->nullable();
             $table->decimal('longitude', 10, 7)->nullable();
