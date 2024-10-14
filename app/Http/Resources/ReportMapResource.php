@@ -18,6 +18,8 @@ class ReportMapResource extends JsonResource
             'id' => $this->id,
             'latitude' => $this->latitude,
             'longitude' => $this->longitude,
+            'code' => $this->code,
+            'date' => $this->date,
         ];
     }
 }
