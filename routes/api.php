@@ -41,7 +41,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('self-projects', [ProjectController::class, 'self']);
     Route::get('self-workspaces', [WorkspaceController::class, 'self']);
 
-    Route::get("export/{surveyProgram}", [SurveyProgramController::class, "xlsxExport"]);
 
     Route::get('survey-program-statistics/{surveyProgram}', FetchSurveyProgramStatisticsInvokable::class)->middleware('survey_program_permission:show');
 
@@ -105,6 +104,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::delete('surveyPrograms/{surveyProgram}', [SurveyProgramController::class, "destroy"]);
     Route::get('surveyPrograms/{surveyProgram}/permissions', [SurveyProgramController::class, "getSurveyProgramPermissions"]);
     Route::get('surveyPrograms/importStatus/{id}', [SurveyProgramController::class, 'importStatus']);
+    Route::get("surveyPrograms/{surveyProgram}/export", [SurveyProgramController::class, "xlsxExport"]);
+
 
     Route::get('projects', [ProjectController::class, "index"]);
     Route::post('projects', [ProjectController::class, "store"]);

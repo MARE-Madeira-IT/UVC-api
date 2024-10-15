@@ -2,6 +2,7 @@
 
 namespace App\Exports\Sheets;
 
+use App\Http\QueryFilters\BenthicsFilters;
 use App\Models\Benthic;
 use App\Models\SurveyProgram;
 use Carbon\Carbon;
@@ -13,16 +14,19 @@ use Maatwebsite\Excel\Concerns\WithTitle;
 
 class BenthicDBSheet implements FromCollection, WithTitle, WithMapping, WithHeadings, WithStrictNullComparison
 {
-  private $surveyProgram, $index = 0;
+  private $surveyProgram, $request, $index = 0;
 
-  public function __construct(SurveyProgram $surveyProgram)
+  public function __construct(SurveyProgram $surveyProgram, $request)
   {
     $this->surveyProgram = $surveyProgram;
+    $this->request = $request;
   }
 
   public function collection()
   {
-    return Benthic::whereHas('report', function ($query) {
+    $filters = BenthicsFilters::hydrate($this->request->query());
+
+    return Benthic::filterBy($filters)->whereHas('report', function ($query) {
       return $query->where('survey_program_id', $this->surveyProgram->id);
     })
       ->join('reports', 'benthics.report_id', '=', 'reports.id')

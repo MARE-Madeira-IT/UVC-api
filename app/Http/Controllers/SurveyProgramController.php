@@ -14,6 +14,7 @@ use App\Models\SurveyProgram;
 use App\Models\SurveyProgramUser;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
@@ -270,8 +271,8 @@ class SurveyProgramController extends Controller
         return response()->json(["message" => 'SurveyProgram is private', 'permissions' => $permissions], 200);
     }
 
-    public function xlsxExport(SurveyProgram $surveyProgram)
+    public function xlsxExport(SurveyProgram $surveyProgram, Request $request)
     {
-        return (new SurveyProgramExport($surveyProgram))->download($surveyProgram->name . '.xlsx', \Maatwebsite\Excel\Excel::XLSX, []);
+        return (new SurveyProgramExport($surveyProgram, $request))->download($surveyProgram->name . '.xlsx', \Maatwebsite\Excel\Excel::XLSX, []);
     }
 }

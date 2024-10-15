@@ -2,6 +2,7 @@
 
 namespace App\Exports\Sheets;
 
+use App\Http\QueryFilters\MotileFilters;
 use App\Models\Motile;
 use App\Models\SurveyProgram;
 use Maatwebsite\Excel\Concerns\FromCollection;
@@ -12,16 +13,19 @@ use Maatwebsite\Excel\Concerns\WithTitle;
 
 class MotileDBSheet implements FromCollection, WithTitle, WithMapping, WithHeadings, WithStrictNullComparison
 {
-  private $surveyProgram, $index = 0;
+  private $surveyProgram, $index = 0, $request;
 
-  public function __construct(SurveyProgram $surveyProgram)
+  public function __construct(SurveyProgram $surveyProgram, $request)
   {
     $this->surveyProgram = $surveyProgram;
+    $this->request = $request;
   }
 
   public function collection()
   {
-    return Motile::whereHas('mareReportMotile', function ($query) {
+    $filters = MotileFilters::hydrate($this->request->query());
+
+    return Motile::filterBy($filters)->whereHas('mareReportMotile', function ($query) {
       $query->whereHas('report', function ($query) {
         return $query->where('survey_program_id', $this->surveyProgram->id);
       });

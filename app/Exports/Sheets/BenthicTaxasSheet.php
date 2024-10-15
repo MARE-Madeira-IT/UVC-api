@@ -2,6 +2,7 @@
 
 namespace App\Exports\Sheets;
 
+use App\Http\QueryFilters\TaxaFilters;
 use App\Models\SurveyProgram;
 use App\Models\Taxa;
 use Maatwebsite\Excel\Concerns\FromCollection;
@@ -12,16 +13,19 @@ use Maatwebsite\Excel\Concerns\WithTitle;
 
 class BenthicTaxasSheet implements FromCollection, WithTitle, WithMapping, WithHeadings, WithStrictNullComparison
 {
-  private $surveyProgram;
+  private $surveyProgram, $request;
 
-  public function __construct(SurveyProgram $surveyProgram)
+  public function __construct(SurveyProgram $surveyProgram, $request)
   {
     $this->surveyProgram = $surveyProgram;
+    $this->request = $request;
   }
 
   public function collection()
   {
-    return Taxa::whereHas('benthics', function ($query) {
+    $filters = TaxaFilters::hydrate($this->request->query());
+
+    return Taxa::filterBy($filters)->whereHas('benthics', function ($query) {
       return $query->whereHas('report', function ($query) {
         return $query->where('survey_program_id', $this->surveyProgram->id);
       });

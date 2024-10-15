@@ -14,21 +14,22 @@ class SurveyProgramExport implements WithMultipleSheets
 {
   use Exportable;
 
-  protected $surveyProgram;
+  protected $surveyProgram, $request;
 
-  public function __construct($surveyProgram)
+  public function __construct($surveyProgram, $request)
   {
     $this->surveyProgram = $surveyProgram;
+    $this->request = $request;
   }
 
   public function sheets(): array
   {
     return [
-      new DiveSiteMetadataSheet($this->surveyProgram),
-      new BenthicDBSheet($this->surveyProgram),
-      new BenthicTaxasSheet($this->surveyProgram),
-      new MotileDBSheet($this->surveyProgram),
-      new MotileTaxasSheet($this->surveyProgram),
+      new DiveSiteMetadataSheet($this->surveyProgram, $this->request),
+      new BenthicDBSheet($this->surveyProgram, $this->request),
+      new BenthicTaxasSheet($this->surveyProgram, $this->request),
+      new MotileDBSheet($this->surveyProgram, $this->request),
+      new MotileTaxasSheet($this->surveyProgram, $this->request),
     ];
   }
 }
