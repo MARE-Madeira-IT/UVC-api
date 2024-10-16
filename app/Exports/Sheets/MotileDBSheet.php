@@ -23,7 +23,7 @@ class MotileDBSheet implements FromCollection, WithTitle, WithMapping, WithHeadi
 
   public function collection()
   {
-    $filters = MotileFilters::hydrate($this->request->query());
+    $filters = MotileFilters::hydrate($this->request);
 
     return Motile::filterBy($filters)->whereHas('mareReportMotile', function ($query) {
       $query->whereHas('report', function ($query) {

@@ -23,7 +23,7 @@ class BenthicTaxasSheet implements FromCollection, WithTitle, WithMapping, WithH
 
   public function collection()
   {
-    $filters = TaxaFilters::hydrate($this->request->query());
+    $filters = TaxaFilters::hydrate($this->request);
 
     return Taxa::filterBy($filters)->whereHas('benthics', function ($query) {
       return $query->whereHas('report', function ($query) {

@@ -73,4 +73,9 @@ class SurveyProgram extends Model
     {
         return $this->hasMany(Report::class, 'survey_program_id');
     }
+
+    public function exports()
+    {
+        return $this->hasMany(Export::class, 'survey_program_id');
+    }
 }

@@ -9,6 +9,7 @@ use App\Http\Controllers\FetchSelfSurveyProgramsInvokable;
 use App\Http\Controllers\InviteMemberToSurveyProgramInvokable;
 use App\Http\Controllers\BenthicController;
 use App\Http\Controllers\DepthController;
+use App\Http\Controllers\ExportController;
 use App\Http\Controllers\FetchSelfProjectsInvokable;
 use App\Http\Controllers\FetchSelfWorkspacesInvokable;
 use App\Http\Controllers\SurveyProgramFunctionController;
@@ -94,6 +95,12 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('reports/{report}', [ReportController::class, "show"])->middleware('survey_program_permission:show');
     Route::put('reports/{report}', [ReportController::class, "update"])->middleware('survey_program_permission:edit');
     Route::delete('reports/{report}', [ReportController::class, "destroy"])->middleware('survey_program_permission:delete');
+
+    Route::get('exports', [ExportController::class, "index"]);
+    Route::get('exports', [ExportController::class, "index"]);
+    Route::post('exports', [ExportController::class, "store"]);
+    Route::get('exports/{export}', [ExportController::class, "show"]);
+    Route::delete('exports/{export}', [ExportController::class, "destroy"]);
 
 
     Route::get('surveyPrograms', [SurveyProgramController::class, "index"]);

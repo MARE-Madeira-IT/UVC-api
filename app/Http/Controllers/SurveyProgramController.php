@@ -271,8 +271,5 @@ class SurveyProgramController extends Controller
         return response()->json(["message" => 'SurveyProgram is private', 'permissions' => $permissions], 200);
     }
 
-    public function xlsxExport(SurveyProgram $surveyProgram, Request $request)
-    {
-        return (new SurveyProgramExport($surveyProgram, $request))->download($surveyProgram->name . '.xlsx', \Maatwebsite\Excel\Excel::XLSX, []);
-    }
+
 }

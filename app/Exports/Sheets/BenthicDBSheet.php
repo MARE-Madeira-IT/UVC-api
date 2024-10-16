@@ -24,7 +24,7 @@ class BenthicDBSheet implements FromCollection, WithTitle, WithMapping, WithHead
 
   public function collection()
   {
-    $filters = BenthicsFilters::hydrate($this->request->query());
+    $filters = BenthicsFilters::hydrate($this->request);
 
     return Benthic::filterBy($filters)->whereHas('report', function ($query) {
       return $query->where('survey_program_id', $this->surveyProgram->id);

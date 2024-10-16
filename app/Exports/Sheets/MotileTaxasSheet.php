@@ -23,7 +23,7 @@ class MotileTaxasSheet implements FromCollection, WithTitle, WithMapping, WithHe
 
   public function collection()
   {
-    $filters = TaxaFilters::hydrate($this->request->query());
+    $filters = TaxaFilters::hydrate($this->request);
 
     return Taxa::filterBy($filters)->whereHas('motiles', function ($query) {
       return $query->whereHas('mareReportMotile', function ($query) {

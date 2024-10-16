@@ -24,7 +24,7 @@ class DiveSiteMetadataSheet implements FromCollection, WithTitle, WithMapping, W
 
   public function collection()
   {
-    $filters = ReportFilters::hydrate($this->request->query());
+    $filters = ReportFilters::hydrate($this->request);
 
     return $this->surveyProgram->reports()->filterBy($filters)->orderBy('date', 'asc')->get();
   }

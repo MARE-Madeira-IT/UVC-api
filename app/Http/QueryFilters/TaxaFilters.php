@@ -29,7 +29,7 @@ class TaxaFilters extends QueryFilters
         });
     }
 
-    public function reportId($ids)
+    public function reports($ids)
     {
         $this->query->whereHas("benthics", function ($q) use ($ids) {
             $q->whereIn("report_id", $ids);
@@ -40,7 +40,7 @@ class TaxaFilters extends QueryFilters
         });
     }
 
-    public function date($dates)
+    public function dates($dates)
     {
         $this->query->whereHas("benthics", function ($q1) use ($dates) {
             $q1->whereHas("report", function ($q2) use ($dates) {
@@ -56,7 +56,7 @@ class TaxaFilters extends QueryFilters
         });
     }
 
-    public function depthId($ids)
+    public function depths($ids)
     {
         $this->query->whereHas("benthics", function ($q1) use ($ids) {
             $q1->whereHas("report", function ($q2) use ($ids) {
@@ -72,18 +72,18 @@ class TaxaFilters extends QueryFilters
         });
     }
 
-    public function site($ids)
+    public function sites($ids)
     {
         $localityIds = array_map(function ($el) {
-            return (int) $el;
+            return (int) $el[0];
         }, array_filter($ids, function ($el) {
-            return !str_contains($el, ',');
+            return count($el) === 1;
         }));
 
         $siteIds = array_map(function ($el) {
-            return (int) explode(',', $el)[1];
+            return (int) $el[1];
         }, array_filter($ids, function ($el) {
-            return str_contains($el, ',');
+            return count($el) > 1;
         }));
 
         $this->query->whereHas("benthics", function ($q1) use ($localityIds, $siteIds) {
@@ -110,15 +110,15 @@ class TaxaFilters extends QueryFilters
     public function taxas($ids)
     {
         $categoryIds = array_map(function ($el) {
-            return (int) $el;
+            return (int) $el[0];
         }, array_filter($ids, function ($el) {
-            return !str_contains($el, ',');
+            return count($el) === 1;
         }));
 
         $taxaIds = array_map(function ($el) {
-            return (int) explode(',', $el)[1];
+            return (int) $el[1];
         }, array_filter($ids, function ($el) {
-            return str_contains($el, ',');
+            return count($el) > 1;
         }));
 
 

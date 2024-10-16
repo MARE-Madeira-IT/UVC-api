@@ -29,33 +29,33 @@ class ReportFilters extends QueryFilters
         });
     }
 
-    public function reportId($ids)
+    public function reports($ids)
     {
         $this->query->whereIn("id", $ids);
     }
 
-    public function date($dates)
+    public function dates($dates)
     {
         $this->query->whereBetween("date", [Carbon::parse($dates[0]), Carbon::parse($dates[1])]);
     }
 
-    public function depthId($ids)
+    public function depths($ids)
     {
         $this->query->whereIn("depth_id", $ids);
     }
 
-    public function site($ids)
+    public function sites($ids)
     {
         $localityIds = array_map(function ($el) {
-            return (int) $el;
+            return (int) $el[0];
         }, array_filter($ids, function ($el) {
-            return !str_contains($el, ',');
+            return count($el) === 1;
         }));
 
         $siteIds = array_map(function ($el) {
-            return (int) explode(',', $el)[1];
+            return (int) $el[1];
         }, array_filter($ids, function ($el) {
-            return str_contains($el, ',');
+            return count($el) > 1;
         }));
 
         $this->query->whereHas("site", function ($query) use ($localityIds) {
@@ -68,15 +68,15 @@ class ReportFilters extends QueryFilters
     public function taxas($ids)
     {
         $categoryIds = array_map(function ($el) {
-            return (int) $el;
+            return (int) $el[0];
         }, array_filter($ids, function ($el) {
-            return !str_contains($el, ',');
+            return count($el) === 1;
         }));
 
         $taxaIds = array_map(function ($el) {
-            return (int) explode(',', $el)[1];
+            return (int) $el[1];
         }, array_filter($ids, function ($el) {
-            return str_contains($el, ',');
+            return count($el) > 1;
         }));
 
         $this->query->whereHas("benthics", function ($q) use (

@@ -3,12 +3,12 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use JWTAuth;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Support\Facades\Auth;
 
-class IndicatorRequest extends FormRequest
+
+class ExportRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,17 +25,24 @@ class IndicatorRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules()
+    public function rules(): array
     {
         return [
-            'name' => 'required|string',
             'survey_program_id' => 'required|integer|exists:survey_programs,id',
-            'type' => 'required|string',
-            'values' => 'sometimes|array',
+            'reports' => 'nullable|array',
+            'reports.*' => 'exists:reports,id',
+            'taxas' => 'nullable|array',
+            'depths' => 'nullable|array',
+            'depths.*' => 'exists:depths,id',
+            'dates' => 'nullable|array',
+            'dates.0' => 'date',
+            'dates.1' => 'date',
+            'sites' => 'nullable|array',
         ];
     }
+
 
     /**
      * Return validation errors as json response

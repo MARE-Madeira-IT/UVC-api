@@ -19,7 +19,7 @@ class DepthRequest extends FormRequest
     {
         $user = Auth::user();
 
-        return $user && true;
+        return $user;
     }
 
     /**
