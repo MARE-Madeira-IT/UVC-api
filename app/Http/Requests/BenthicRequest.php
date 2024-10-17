@@ -18,7 +18,7 @@ class BenthicRequest extends FormRequest
     {
         $user = Auth::user();
 
-        return $user;
+        return $user && true;
     }
 
     /**
@@ -31,9 +31,9 @@ class BenthicRequest extends FormRequest
         return [
             'report_id' => 'required|integer|exists:reports,id',
             'benthics' => 'required|array',
+            'benthics.*.id' => 'nullable|integer|exists:benthics,id',
             'benthics.*.taxa_id' => 'nullable|array|size:2',
             'benthics.*.taxa_id.1' => 'nullable|integer|exists:taxas,id',
-
             'benthics.*.p' => 'required|integer|min:1|max:100',
             'benthics.*.substrate_id' => 'required|integer|exists:substrates,id',
             'benthics.*.notes' => 'nullable|string',

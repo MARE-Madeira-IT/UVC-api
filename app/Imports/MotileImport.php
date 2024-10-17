@@ -126,11 +126,11 @@ class MotileImport implements ToCollection, WithValidation, WithHeadingRow, Skip
                 $bValue = (float) $bIndicator->pivot->name;
             }
 
-            if (isset($aValue) && isset($bValue)) {
+            if (isset($aValue) && isset($bValue) && isset($row["size"]) && $row["size"] > 0) {
                 $biomass = $aValue * pow((float) $row["size"], $bValue);
             }
 
-            if (isset($biomass)) {
+            if (isset($row["ntotal"]) && isset($reportMotile->report->surveyed_area)) {
                 $density = (float) $row["ntotal"] / $reportMotile->report->surveyed_area;
             }
 

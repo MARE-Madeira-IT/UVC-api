@@ -23,7 +23,7 @@ class ReportController extends Controller
      */
     public function index(ReportFilters $filters)
     {
-        return ReportResource::collection(Report::filterBy($filters)->paginate(10));
+        return ReportResource::collection(Report::filterBy($filters)->orderBy('date')->paginate(10));
     }
 
     public function selector(ReportFilters $filters)

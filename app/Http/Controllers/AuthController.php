@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\UserResource;
 use App\Http\Requests\RegisterRequest;
 use App\Mail\ConfirmEmail;
+use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
@@ -38,8 +39,6 @@ class AuthController extends Controller
         $user->active = 1;
         //$user->is_verified = 1;
         $user->save();
-
-        $user->syncRoles([$validator['role']]);
 
         DB::commit();
 
@@ -85,7 +84,7 @@ class AuthController extends Controller
             if (!$token = Auth::attempt($credentials)) {
                 return response()->json(['success' => false, 'message' => 'We cant find an account with this credentials. Please make sure you entered the right information and you have verified your email address.'], 404);
             }
-        } catch (JWTException $e) {
+        } catch (Exception $e) {
             // something went wrong whilst attempting to encode the token
             return response()->json(['success' => false, 'message' => 'Failed to login, please try again.'], 500);
         }
@@ -116,6 +115,12 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         try {
+            $user = Auth::user();
+
+            if (!$user) {
+                return response()->json(['error' => 'Unauthenticated'], 401);
+            }
+
             Auth::logout();
 
             $request->session()->invalidate();
@@ -123,7 +128,8 @@ class AuthController extends Controller
             $request->session()->regenerateToken();
 
             return response()->json(['success' => true, 'message' => "You have successfully logged out."]);
-        } catch (JWTException $e) {
+        } catch (Exception $e) {
+
             // something went wrong whilst attempting to encode the token
             return response()->json(['success' => false, 'error' => 'Failed to logout, please try again.'], 500);
         }

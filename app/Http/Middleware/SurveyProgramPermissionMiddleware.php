@@ -34,7 +34,7 @@ class SurveyProgramPermissionMiddleware
     public function handle($request, Closure $next, string $permission)
     {
         $user = Auth::user();
-        $surveyProgram = $request->header('survey_program');
+        $surveyProgram = $request->survey_program;
 
 
         try {

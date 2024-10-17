@@ -86,8 +86,12 @@ class ExportController extends Controller
                 ],
             ]);
 
-            $newEntry->localities()->attach($siteValidator["localityIds"]);
-            $newEntry->sites()->attach($siteValidator["siteIds"]);
+            if (array_key_exists("categoryIds", $siteValidator)) {
+                $newEntry->localities()->attach($siteValidator["localityIds"]);
+            }
+            if (array_key_exists("categoryIds", $siteValidator)) {
+                $newEntry->sites()->attach($siteValidator["siteIds"]);
+            }
         }
 
         if (array_key_exists("taxas", $validator)) {
@@ -119,8 +123,13 @@ class ExportController extends Controller
                     Rule::exists('taxas', 'id')->where('survey_program_id', $validator["survey_program_id"]),
                 ],
             ]);
-            $newEntry->taxas()->attach($taxaValidator["taxaIds"]);
-            $newEntry->taxaCategories()->attach($taxaValidator["categoryIds"]);
+
+            if (array_key_exists("taxaIds", $taxaValidator)) {
+                $newEntry->taxas()->attach($taxaValidator["taxaIds"]);
+            }
+            if (array_key_exists("categoryIds", $taxaValidator)) {
+                $newEntry->taxaCategories()->attach($taxaValidator["categoryIds"]);
+            }
         }
 
         $filename = $surveyProgram->name . '-' . now()->format('Ymdhis') . '.xlsx';

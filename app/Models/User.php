@@ -7,13 +7,12 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Notifications\PasswordResetNotification;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Cerbero\QueryFilters\FiltersRecords;
-use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class User extends Authenticatable
 {
-    use Notifiable, FiltersRecords, HasRoles;
+    use Notifiable, FiltersRecords;
 
     protected $table = 'wave.users';
     protected $connection = 'mysql_wave';
@@ -49,6 +48,8 @@ class User extends Authenticatable
 
     protected $guard_name = 'api';
 
+
+
     /**
      *  Create user and user type
      *
@@ -57,14 +58,13 @@ class User extends Authenticatable
     public static function create(array $attributes = [])
     {
 
-        $userTypes = User::types();
         DB::beginTransaction();
 
-        $newUserType = $userTypes[$attributes['userable_type']]::create($attributes);
+        $newUserType = UserPerson::class::create($attributes);
 
         //$attributes['user_type'] = $newUserType->getMorphClass();
         $attributes['userable_id'] = $newUserType->id;
-        $attributes['token'] = str_random(16);
+        $attributes['token'] = bin2hex(random_bytes(6)); //each byte is 2 hex, so 12 chars
 
         $model = static::query()->create($attributes);
 

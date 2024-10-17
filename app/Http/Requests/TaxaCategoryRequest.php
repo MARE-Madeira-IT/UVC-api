@@ -19,7 +19,7 @@ class TaxaCategoryRequest extends FormRequest
     {
         $user = Auth::user();
 
-        return $user;
+        return $user && true;
     }
 
     /**

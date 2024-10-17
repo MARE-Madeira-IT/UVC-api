@@ -20,17 +20,10 @@ class RegisterRequest extends FormRequest
 
     protected function prepareForValidation()
     {
-        if ($this->userable_type == 'UserDiveCenter') {
-            $this->merge([
-                'userable_type' => 'App\UserDiveCenter',
-                'role' => 'dive-center'
-            ]);
-        } else if ($this->userable_type == 'UserPerson') {
-            $this->merge([
-                'userable_type' => 'App\Models\UserPerson',
-                'role' => 'person'
-            ]);
-        }
+        $this->merge([
+            'userable_type' => 'App\Models\UserPerson',
+            'role' => 'person'
+        ]);
     }
 
     /**
@@ -41,7 +34,7 @@ class RegisterRequest extends FormRequest
     public function rules()
     {
         return [
-            'email' => 'required|email|unique:users',
+            'email' => 'required|email|unique:mysql_wave.users',
             'password' => 'required|string|min:2',
             'userable_type' => 'required|string',
             'role' => 'required|string|in:person,dive-center',

@@ -8,7 +8,7 @@ class SiteObserver
 {
     private function deleteExports(Site $site)
     {
-        $surveyProgram = $site->locality->report->surveyProgram;
+        $surveyProgram = $site->locality->surveyProgram;
 
         $surveyProgram->exports()->delete();
     }

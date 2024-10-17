@@ -167,6 +167,10 @@ class DiveMetadataImport implements ToCollection, WithValidation, WithHeadingRow
 
             $code = $locality->code . '_' . $site->code . '_Time' . $row["time"] . '_D' . $depth->code . '_R' . $row["replica"];
 
+
+            $latitude = $row['latitude'] ? $row['latitude'] : $site->latitude;
+            $longitude = $row['longitude'] ? $row['longitude'] : $site->latitude;
+
             $report = Report::create([
                 "survey_program_id" => $surveyProgram->id,
                 "time" => $row['time'],
@@ -175,8 +179,8 @@ class DiveMetadataImport implements ToCollection, WithValidation, WithHeadingRow
                 'transect' => $row['transect'],
                 'daily_dive' => $row['daily_dive'],
                 'replica' => $row['replica'],
-                'latitude' => $row['latitude'],
-                'longitude' => $row['longitude'],
+                'latitude' => $latitude,
+                'longitude' => $longitude,
                 'heading' => $row['heading'],
                 'heading_direction' => $row['heading_direction'],
                 'site_area' => $row['site_area'],

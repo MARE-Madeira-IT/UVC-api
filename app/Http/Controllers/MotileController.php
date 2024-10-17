@@ -48,7 +48,6 @@ class MotileController extends Controller
 
 
         foreach ($validator["motiles"] as $motile) {
-            // $density =
             $taxa = Taxa::findOrFail($motile["taxa_id"]);
             $aIndicator = $taxa->indicators()->where('indicators.name', 'a')->first();
             $bIndicator = $taxa->indicators()->where('indicators.name', 'b')->first();
@@ -57,21 +56,20 @@ class MotileController extends Controller
             $density = null;
 
             if (isset($aIndicator)) {
-                $aValue = $aIndicator->pivot->name;
+                $aValue = (float) $aIndicator->pivot->name;
             }
 
             if (isset($bIndicator)) {
-                $biomass = $bValue = $bIndicator->pivot->name;
+                $bValue = (float) $bIndicator->pivot->name;
             }
 
-            if (isset($aValue) && isset($bValue)) {
-                $density = $aValue * pow($motile["size"], $bValue);
+            if (isset($aValue) && isset($bValue) && isset($motile["size"])) {
+                $biomass = $aValue * pow((float) $motile["size"], $bValue);
             }
 
-            if (isset($biomass)) {
-                $motile["ntotal"] / $mareReportMotile->report->surveyed_area;
+            if (isset($motile["ntotal"]) && isset($mareReportMotile->report->surveyed_area)) {
+                $density = (float) $motile["ntotal"] / $mareReportMotile->report->surveyed_area;
             }
-
 
             Motile::create([
                 "report_motile_id" => $mareReportMotile->id,
@@ -123,20 +121,25 @@ class MotileController extends Controller
             $aIndicator = $taxa->indicators()->where('indicators.name', 'a')->first();
             $bIndicator = $taxa->indicators()->where('indicators.name', 'b')->first();
 
-            $biomass = "N/A";
-            $density = "N/A";
+            $biomass = null;
+            $density = null;
 
             if (isset($aIndicator)) {
-                $aValue = $aIndicator->pivot->name;
+                $aValue = (float) $aIndicator->pivot->name;
             }
 
             if (isset($bIndicator)) {
-                $bValue = $bIndicator->pivot->name;
+                $bValue = (float) $bIndicator->pivot->name;
             }
 
-            $biomass = isset($aValue) && isset($bValue) ? $aValue * pow($motile["size"], $bValue) : "N/A";
-            $density = isset($biomass) ? $motile["ntotal"] / $mareReportMotile->report->surveyed_area : "N/A";
+            if (isset($aValue) && isset($bValue) && isset($motile["size"])) {
+                $biomass = $aValue * pow((float) $motile["size"], $bValue);
+            }
 
+            if (isset($motile["ntotal"]) && isset($mareReportMotile->report->surveyed_area)) {
+                $density = (float) $motile["ntotal"] / $mareReportMotile->report->surveyed_area;
+            }
+            
             Motile::create([
                 "report_motile_id" => $mareReportMotile->id,
                 "taxa_id" => $motile["taxa_id"],
