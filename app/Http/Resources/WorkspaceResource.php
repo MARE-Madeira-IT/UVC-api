@@ -22,7 +22,7 @@ class WorkspaceResource extends JsonResource
             'users' => WorkspaceUserResource::collection($this->workspaceUsers),
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at,
-            'permissions' => $this->workspaceUsers()->where('user_id', Auth::id())->first()->permissions->pluck("name"),
+            'permissions' => $this->workspaceUsers()?->where('user_id', Auth::id())?->first()?->permissions?->pluck("name"),
         ];
     }
 }

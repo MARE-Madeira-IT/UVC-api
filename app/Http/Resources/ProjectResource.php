@@ -30,7 +30,7 @@ class ProjectResource extends JsonResource
             'users' => ProjectUserResource::collection($this->projectUsers),
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at,
-            'permissions' => $this->projectUsers()->where('user_id', Auth::id())->first()->permissions->pluck("name"),
+            'permissions' => $this->projectUsers()?->where('user_id', Auth::id())?->first()?->permissions?->pluck("name"),
 
         ];
     }

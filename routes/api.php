@@ -43,7 +43,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('self-workspaces', [WorkspaceController::class, 'self']);
 
 
-    Route::get('survey-program-statistics/{surveyProgram}', FetchSurveyProgramStatisticsInvokable::class)->middleware('survey_program_permission:show');
+    Route::get('survey-program-statistics/{surveyProgram}', FetchSurveyProgramStatisticsInvokable::class);
 
     Route::get('surveyProgramUsers', [SurveyProgramUserController::class, "index"]);
     Route::post('surveyProgramUsers/invite-member', [SurveyProgramUserController::class, "store"]);

@@ -73,13 +73,7 @@ class DiveSiteMetadataSheet implements FromCollection, WithTitle, WithMapping, W
 
   public function map($report): array
   {
-    $functions = $report->functions;
-
-    $functionCols = array();
-
-    foreach ($functions as $value) {
-      array_push($functionCols, $value->pivot->user);
-    }
+    $functionCols = $report->functions->pluck('pivot.user')->toArray();
 
     return [
       "###" => ++$this->index,

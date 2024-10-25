@@ -36,6 +36,9 @@ class SurveyProgramPermissionMiddleware
         $user = Auth::user();
         $surveyProgram = $request->survey_program;
 
+        if (is_null($surveyProgram)) {
+            $surveyProgram = $request->survey_program_id;
+        }
 
         try {
             $surveyProgramArray = json_decode($surveyProgram);
@@ -48,7 +51,7 @@ class SurveyProgramPermissionMiddleware
             }
         } catch (\Throwable $th) {
             if (!SurveyProgramPermissionMiddleware::checkUserPermissionOnSurveyProgram($user->id, $surveyProgramArray, $permission)) {
-                $surveyProgramName = SurveyProgram::findOrFail($surveyProgramArray)->name;
+                $surveyProgramName = SurveyProgram::findOrFail($surveyProgram)->name;
                 return response()->json(["You don't have access to {$permission} on the survey program: \"{$surveyProgramName}\""], 403);
             }
         }
