@@ -7,6 +7,7 @@ use JWTAuth;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class IndicatorRequest extends FormRequest
 {
@@ -30,7 +31,14 @@ class IndicatorRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string',
+            'name' => [
+                'required',
+                'string',
+                Rule::unique('indicators', 'name')->where(function ($query) {
+                    $query->where('survey_program_id', $this->survey_program_id)
+                        ->where('deleted_at', null);
+                })->ignore($this?->indicator?->id)
+            ],
             'survey_program_id' => 'required|integer|exists:survey_programs,id',
             'type' => 'required|string',
             'values' => 'sometimes|array',

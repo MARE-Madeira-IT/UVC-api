@@ -31,11 +31,21 @@ class SurveyProgramPermissionMiddleware
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next, string $permission)
+    public function handle($request, Closure $next, string $params)
     {
-        $user = Auth::user();
-        $surveyProgram = $request->survey_program;
+        $permission = $params;
+        $surveyProgram = null;
+        if (str_contains($params, '|')) {
+            $paramsArr = explode('|', $params);
+            $permission = $paramsArr[0];
 
+            $surveyProgram = $request[$paramsArr[1]]->surveyProgram->id;
+        }
+
+        $user = Auth::user();
+        if (is_null($surveyProgram)) {
+            $surveyProgram = $request->survey_program;
+        }
         if (is_null($surveyProgram)) {
             $surveyProgram = $request->survey_program_id;
         }

@@ -94,9 +94,9 @@ class MotileController extends Controller
      * @param  \App\Motile  $mareMotile
      * @return \Illuminate\Http\Response
      */
-    public function show(Motile $motile)
+    public function show(ReportMotile $mareReportMotileId)
     {
-        return new MotileResource($motile);
+        return new MotileGroupedResource($mareReportMotileId);
     }
 
     /**
@@ -139,7 +139,7 @@ class MotileController extends Controller
             if (isset($motile["ntotal"]) && isset($mareReportMotile->report->surveyed_area)) {
                 $density = (float) $motile["ntotal"] / $mareReportMotile->report->surveyed_area;
             }
-            
+
             Motile::create([
                 "report_motile_id" => $mareReportMotile->id,
                 "taxa_id" => $motile["taxa_id"],
@@ -148,7 +148,7 @@ class MotileController extends Controller
                 'density/1' => $density,
                 'biomass/1' => $biomass,
                 "ntotal" => $motile["ntotal"],
-                "notes" => $motile["notes"],
+                "notes" => $motile["notes"] ?? '',
             ]);
         }
 

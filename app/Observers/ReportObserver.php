@@ -35,5 +35,9 @@ class ReportObserver
     public function deleted(Report $report): void
     {
         $this->deleteExports($report);
+
+        $report->update([
+            'code' => time() . '|' . $report->code
+        ]);
     }
 }

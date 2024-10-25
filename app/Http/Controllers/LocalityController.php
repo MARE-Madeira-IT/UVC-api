@@ -41,10 +41,12 @@ class LocalityController extends Controller
 
         $newEntry = Locality::create($validator);
 
-        foreach ($validator["sites"] as $key => $site) {
+        foreach ($validator["sites"] as $site) {
             Site::create([
                 "name" => $site["name"],
                 "code" => $site["code"],
+                "latitude" => $site["latitude"],
+                "longitude" => $site["longitude"],
                 "locality_id" => $newEntry->id,
             ]);
         }

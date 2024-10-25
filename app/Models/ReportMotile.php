@@ -25,4 +25,9 @@ class ReportMotile extends Model
     {
         return $this->hasMany(Motile::class, 'report_motile_id');
     }
+
+    public function surveyProgram()
+    {
+        return $this->report->surveyProgram;
+    }
 }

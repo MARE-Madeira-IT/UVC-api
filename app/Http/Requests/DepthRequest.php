@@ -7,6 +7,7 @@ use JWTAuth;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class DepthRequest extends FormRequest
 {
@@ -30,7 +31,13 @@ class DepthRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string|unique:depths,name',
+            'name' => [
+                'required',
+                'string',
+                Rule::unique('depths', 'name')->where(function ($query) {
+                    $query->where('survey_program_id', $this->survey_program_id);
+                })->ignore($this?->depth?->id)
+            ],
             'survey_program_id' => 'required|integer|exists:survey_programs,id',
         ];
     }

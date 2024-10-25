@@ -32,4 +32,9 @@ class Benthic extends Model
     {
         return $this->belongsTo(Substrate::class);
     }
+
+    public function surveyProgram()
+    {
+        return $this->report->surveyProgram;
+    }
 }

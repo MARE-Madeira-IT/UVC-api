@@ -23,7 +23,7 @@ class TaxaCategoryController extends Controller
 
     public function selector(TaxaCategoryFilters $filters)
     {
-        return TaxaCategoryResource::collection(TaxaCategory::filterBy($filters)->all());
+        return TaxaCategoryResource::collection(TaxaCategory::filterBy($filters)->get());
     }
 
     /**

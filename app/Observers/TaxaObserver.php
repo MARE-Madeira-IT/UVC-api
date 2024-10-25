@@ -35,5 +35,9 @@ class TaxaObserver
     public function deleted(Taxa $taxa): void
     {
         $this->deleteExports($taxa);
+
+        $taxa->update([
+            'name' => time() . '|' . $taxa->name
+        ]);
     }
 }

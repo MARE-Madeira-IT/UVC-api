@@ -38,7 +38,7 @@ class ReportRequest extends FormRequest
             'survey_program_id' => 'integer|exists:survey_programs,id',
             'code' => ['required', 'string', Rule::unique('reports', 'code')->where(function ($query) {
                 $query->where('survey_program_id', $this->survey_program_id);
-            })  ],//->ignore($this?->report?->id)],
+            })->ignore($this?->report?->id)],
             'date' => 'required|date',
             'transect' => 'required|integer',
             'replica' => 'required|integer',

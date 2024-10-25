@@ -42,7 +42,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('self-projects', [ProjectController::class, 'self']);
     Route::get('self-workspaces', [WorkspaceController::class, 'self']);
 
-
     Route::get('survey-program-statistics/{surveyProgram}', FetchSurveyProgramStatisticsInvokable::class);
 
     Route::get('surveyProgramUsers', [SurveyProgramUserController::class, "index"]);
@@ -68,16 +67,16 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::get('localities', [LocalityController::class, "index"])->middleware('survey_program_permission:show');
     Route::post('localities', [LocalityController::class, "store"])->middleware('survey_program_permission:create');
-    Route::get('localities/{locality}', [LocalityController::class, "show"])->middleware('survey_program_permission:show');
-    Route::put('localities/{locality}', [LocalityController::class, "update"])->middleware('survey_program_permission:edit');
-    Route::delete('localities/{locality}', [LocalityController::class, "destroy"])->middleware('survey_program_permission:delete');
+    Route::get('localities/{locality}', [LocalityController::class, "show"])->middleware('survey_program_permission:show|locality');
+    Route::put('localities/{locality}', [LocalityController::class, "update"])->middleware('survey_program_permission:edit|locality');
+    Route::delete('localities/{locality}', [LocalityController::class, "destroy"])->middleware('survey_program_permission:delete|locality');
 
 
     Route::get('taxas', [TaxaController::class, "index"])->middleware('survey_program_permission:show');
     Route::post('taxas', [TaxaController::class, "store"])->middleware('survey_program_permission:create');
-    Route::get('taxas/{taxa}', [TaxaController::class, "show"])->middleware('survey_program_permission:show');
-    Route::put('taxas/{taxa}', [TaxaController::class, "update"])->middleware('survey_program_permission:edit');
-    Route::delete('taxas/{taxa}', [TaxaController::class, "destroy"])->middleware('survey_program_permission:delete');
+    Route::get('taxas/{taxa}', [TaxaController::class, "show"])->middleware('survey_program_permission:show|taxa');
+    Route::put('taxas/{taxa}', [TaxaController::class, "update"])->middleware('survey_program_permission:edit|taxa');
+    Route::delete('taxas/{taxa}', [TaxaController::class, "destroy"])->middleware('survey_program_permission:delete|taxa');
 
 
     Route::post('taxas/photo/{taxa}', [TaxaController::class, "uploadPhoto"]);
@@ -85,16 +84,16 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::get('indicators', [IndicatorController::class, "index"])->middleware('survey_program_permission:show');
     Route::post('indicators', [IndicatorController::class, "store"])->middleware('survey_program_permission:create');
-    Route::get('indicators/{indicator}', [IndicatorController::class, "show"])->middleware('survey_program_permission:show');
-    Route::put('indicators/{indicator}', [IndicatorController::class, "update"])->middleware('survey_program_permission:edit');
-    Route::delete('indicators/{indicator}', [IndicatorController::class, "destroy"])->middleware('survey_program_permission:delete');
+    Route::get('indicators/{indicator}', [IndicatorController::class, "show"])->middleware('survey_program_permission:show|indicator');
+    Route::put('indicators/{indicator}', [IndicatorController::class, "update"])->middleware('survey_program_permission:edit|indicator');
+    Route::delete('indicators/{indicator}', [IndicatorController::class, "destroy"])->middleware('survey_program_permission:delete|indicator');
 
 
     Route::get('reports', [ReportController::class, "index"])->middleware('survey_program_permission:show');
     Route::post('reports', [ReportController::class, "store"])->middleware('survey_program_permission:create');
-    Route::get('reports/{report}', [ReportController::class, "show"])->middleware('survey_program_permission:show');
-    Route::put('reports/{report}', [ReportController::class, "update"])->middleware('survey_program_permission:edit');
-    Route::delete('reports/{report}', [ReportController::class, "destroy"])->middleware('survey_program_permission:delete');
+    Route::get('reports/{report}', [ReportController::class, "show"])->middleware('survey_program_permission:show|report');
+    Route::put('reports/{report}', [ReportController::class, "update"])->middleware('survey_program_permission:edit|report');
+    Route::delete('reports/{report}', [ReportController::class, "destroy"])->middleware('survey_program_permission:delete|report');
 
     Route::get('exports', [ExportController::class, "index"]);
     Route::get('exports', [ExportController::class, "index"]);
@@ -132,23 +131,23 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::get('taxa_categories', [TaxaCategoryController::class, "index"])->middleware('survey_program_permission:show');
     Route::post('taxa_categories', [TaxaCategoryController::class, "store"])->middleware('survey_program_permission:create');
-    Route::get('taxa_categories/{taxaCategory}', [TaxaCategoryController::class, "show"])->middleware('survey_program_permission:show');
-    Route::put('taxa_categories/{taxaCategory}', [TaxaCategoryController::class, "update"])->middleware('survey_program_permission:edit');
-    Route::delete('taxa_categories/{taxaCategory}', [TaxaCategoryController::class, "destroy"])->middleware('survey_program_permission:delete');
+    Route::get('taxa_categories/{taxaCategory}', [TaxaCategoryController::class, "show"])->middleware('survey_program_permission:show|taxaCategory');
+    Route::put('taxa_categories/{taxaCategory}', [TaxaCategoryController::class, "update"])->middleware('survey_program_permission:edit|taxaCategory');
+    Route::delete('taxa_categories/{taxaCategory}', [TaxaCategoryController::class, "destroy"])->middleware('survey_program_permission:delete|taxaCategory');
 
 
     Route::get('benthics', [BenthicController::class, "index"])->middleware('survey_program_permission:show');
     Route::post('benthics', [BenthicController::class, "store"])->middleware('survey_program_permission:create');
-    Route::get('benthics/{id}', [BenthicController::class, "show"])->middleware('survey_program_permission:show');
-    Route::put('benthics/{benthic}', [BenthicController::class, "update"])->middleware('survey_program_permission:edit');
-    Route::delete('benthics/{benthic}', [BenthicController::class, "destroy"])->middleware('survey_program_permission:delete');
+    Route::get('benthics/{benthic}', [BenthicController::class, "show"])->middleware('survey_program_permission:show|benthic');
+    Route::put('benthics/{benthic}', [BenthicController::class, "update"])->middleware('survey_program_permission:edit|benthic');
+    Route::delete('benthics/{benthic}', [BenthicController::class, "destroy"])->middleware('survey_program_permission:delete|benthic');
 
 
     Route::get('depths', [DepthController::class, "index"])->middleware('survey_program_permission:show');
     Route::post('depths', [DepthController::class, "store"])->middleware('survey_program_permission:create');
-    Route::get('depths/{depth}', [DepthController::class, "show"])->middleware('survey_program_permission:show');
-    Route::put('depths/{depth}', [DepthController::class, "update"])->middleware('survey_program_permission:edit');
-    Route::delete('depths/{depth}', [DepthController::class, "destroy"])->middleware('survey_program_permission:delete');
+    Route::get('depths/{depth}', [DepthController::class, "show"])->middleware('survey_program_permission:show|depth');
+    Route::put('depths/{depth}', [DepthController::class, "update"])->middleware('survey_program_permission:edit|depth');
+    Route::delete('depths/{depth}', [DepthController::class, "destroy"])->middleware('survey_program_permission:delete|depth');
 
 
     Route::get('substrates', [SubstrateController::class, "index"])->middleware('survey_program_permission:show');
@@ -156,16 +155,16 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::get('functions', [SurveyProgramFunctionController::class, "index"])->middleware('survey_program_permission:show');
     Route::post('functions', [SurveyProgramFunctionController::class, "store"])->middleware('survey_program_permission:create');
-    Route::get('functions/{function}', [SurveyProgramFunctionController::class, "show"])->middleware('survey_program_permission:show');
-    Route::put('functions/{function}', [SurveyProgramFunctionController::class, "update"])->middleware('survey_program_permission:edit');
-    Route::delete('functions/{function}', [SurveyProgramFunctionController::class, "destroy"])->middleware('survey_program_permission:delete');
+    Route::get('functions/{function}', [SurveyProgramFunctionController::class, "show"])->middleware('survey_program_permission:show|function');
+    Route::put('functions/{function}', [SurveyProgramFunctionController::class, "update"])->middleware('survey_program_permission:edit|function');
+    Route::delete('functions/{function}', [SurveyProgramFunctionController::class, "destroy"])->middleware('survey_program_permission:delete|function');
 
 
     Route::get('motiles', [MotileController::class, "index"])->middleware('survey_program_permission:show');
     Route::post('motiles', [MotileController::class, "store"])->middleware('survey_program_permission:create');
-    Route::get('motiles/{motile}', [MotileController::class, "show"])->middleware('survey_program_permission:show');
-    Route::put('motiles/{mareReportMotileId}', [MotileController::class, "update"])->middleware('survey_program_permission:edit');
-    Route::delete('motiles/{mareReportMotileId}', [MotileController::class, "destroy"])->middleware('survey_program_permission:delete');
+    Route::get('motiles/{mareReportMotileId}', [MotileController::class, "show"])->middleware('survey_program_permission:show|mareReportMotileId');
+    Route::put('motiles/{mareReportMotileId}', [MotileController::class, "update"])->middleware('survey_program_permission:edit|mareReportMotileId');
+    Route::delete('motiles/{mareReportMotileId}', [MotileController::class, "destroy"])->middleware('survey_program_permission:delete|mareReportMotileId');
 
 
     Route::prefix('selector')->group(function () {
