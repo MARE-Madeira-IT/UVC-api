@@ -10,7 +10,6 @@ class DepthObserver
     {
         $depth->update([
             'name' => time() . '|' . $depth->name,
-            'code' => time() . '|' . $depth->code,
         ]);
     }
 }
