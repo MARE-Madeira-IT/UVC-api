@@ -14,11 +14,13 @@ class DatabaseSeeder extends Seeder
             $this->call([
                 PermissionSeeder::class,
                 SubstrateSeeder::class,
+                SizeCategorySeeder::class,
             ]);
         } else {
             $this->call([
                 PermissionSeeder::class,
                 SubstrateSeeder::class,
+                SizeCategorySeeder::class,
                 MareSeeder::class
             ]);
         }

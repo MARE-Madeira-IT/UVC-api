@@ -1300,22 +1300,6 @@ class MareSeeder extends Seeder
             }
         }
 
-        $sizeCategories = [
-            ['name' => '<5'],
-            ['name' => '6-10'],
-            ['name' => '11-20'],
-            ['name' => '21-30'],
-            ['name' => '31-40'],
-            ['name' => '41-50'],
-            ['name' => '51-70'],
-            ['name' => '71-100'],
-            ['name' => '>100'],
-        ];
-
-        foreach ($sizeCategories as $sizeCategory) {
-            SizeCategory::create($sizeCategory);
-        }
-
         $teamFunctions = [
             ['name' => 'fish', 'survey_program_id' => $surveyProgram->id],
             ['name' => 'cryptic', 'survey_program_id' => $surveyProgram->id],
