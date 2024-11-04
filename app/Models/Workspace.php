@@ -10,7 +10,7 @@ class Workspace extends Model
 {
     use FiltersRecords, SoftDeletes;
 
-    protected $table = 'wave_mare.workspaces';
+    protected $table = 'uvc.workspaces';
     protected $connection = 'mysql';
 
     protected $fillable = [
@@ -31,7 +31,7 @@ class Workspace extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class, 'wave_mare.workspace_users', 'workspace_id', 'user_id');
+        return $this->belongsToMany(User::class, 'uvc.workspace_users', 'workspace_id', 'user_id');
     }
 
     public function workspaceUsers()

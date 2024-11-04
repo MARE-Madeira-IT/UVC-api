@@ -11,7 +11,7 @@ class ProjectUser extends Pivot
 
     public $incrementing = true;
 
-    protected $table = 'wave_mare.project_users';
+    protected $table = 'uvc.project_users';
     protected $connection = 'mysql';
 
     protected $fillable = [

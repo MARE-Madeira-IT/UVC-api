@@ -10,7 +10,7 @@ class SurveyProgram extends Model
 {
     use FiltersRecords, SoftDeletes;
 
-    protected $table = 'wave_mare.survey_programs';
+    protected $table = 'uvc.survey_programs';
     protected $connection = 'mysql';
 
     protected $fillable = [
@@ -41,7 +41,7 @@ class SurveyProgram extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class, 'wave_mare.survey_program_users', 'survey_program_id', 'user_id');
+        return $this->belongsToMany(User::class, 'uvc.survey_program_users', 'survey_program_id', 'user_id');
     }
 
     public function taxas()

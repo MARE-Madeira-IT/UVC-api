@@ -10,7 +10,7 @@ class Project extends Model
 {
     use FiltersRecords, SoftDeletes;
 
-    protected $table = 'wave_mare.projects';
+    protected $table = 'uvc.projects';
     protected $connection = 'mysql';
 
     protected $fillable = [
@@ -38,7 +38,7 @@ class Project extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class, 'wave_mare.project_users', 'project_id', 'user_id');
+        return $this->belongsToMany(User::class, 'uvc.project_users', 'project_id', 'user_id');
     }
 
     public function projectUsers()

@@ -11,7 +11,7 @@ class WorkspaceUser extends Pivot
 
     public $incrementing = true;
 
-    protected $table = 'wave_mare.workspace_users';
+    protected $table = 'uvc.workspace_users';
     protected $connection = 'mysql';
 
     protected $fillable = [

@@ -12,7 +12,7 @@ class SurveyProgramUser extends Pivot
 
     public $incrementing = true;
 
-    protected $table = 'wave_mare.survey_program_users';
+    protected $table = 'uvc.survey_program_users';
     protected $connection = 'mysql';
 
     protected $fillable = [
