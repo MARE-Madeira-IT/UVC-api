@@ -33,18 +33,6 @@ class MareSeeder extends Seeder
      */
     public function run()
     {
-        $permissions = [
-            "create",
-            "show",
-            "edit",
-            "delete",
-            "admin",
-        ];
-
-        foreach ($permissions as $name) {
-            Permission::create(["name" => $name]);
-        }
-
         $workspace = Workspace::create([
             "name" => "MARE-Madeira",
             "description" => "A non-profit marine research institute on Madeira Island, MARE-Madeira is one of seven MARE regional research units across Portugal."
@@ -1448,23 +1436,6 @@ class MareSeeder extends Seeder
                     'locality_id' => $createdLocality->id
                 ]);
             }
-        }
-
-
-
-        $substrates = [
-            ['name' => 'block'],
-            ['name' => 'rubble'],
-            ['name' => 'boulder'],
-            ['name' => 'platform'],
-            ['name' => 'pavement'],
-            ['name' => 'sand'],
-            ['name' => 'gravel'],
-            ['name' => 'rumble'],
-        ];
-
-        foreach ($substrates as $substrate) {
-            Substrate::create($substrate);
         }
 
         $report = Report::create([
