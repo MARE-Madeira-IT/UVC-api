@@ -6,6 +6,7 @@ use App\Exports\SurveyProgramExport;
 use App\Http\Requests\ExportRequest;
 use App\Http\Resources\ExportResource;
 use App\Jobs\SurveyProgramExportCompletedJob;
+use App\Jobs\SurveyProgramExportJob;
 use App\Models\Export;
 use App\Models\SurveyProgram;
 use App\QueryFilters\ExportFilters;
@@ -134,10 +135,7 @@ class ExportController extends Controller
 
         $filename = $surveyProgram->name . '-' . now()->format('Ymdhis') . '.xlsx';
 
-        (new SurveyProgramExport($newEntry, $request->toArray()))->queue($filename, 'local', \Maatwebsite\Excel\Excel::XLSX)
-            ->chain([
-                new SurveyProgramExportCompletedJob($newEntry, $filename)
-            ]);
+        SurveyProgramExportJob::dispatch($newEntry, $request->toArray(), $filename);
 
         return new ExportResource($newEntry);
     }
