@@ -11,6 +11,7 @@ use App\Imports\SurveyProgramImport;
 use App\Models\Permission;
 use App\Models\SurveyProgram;
 use App\Models\SurveyProgramUser;
+use App\Models\TaxaCategory;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -70,6 +71,22 @@ class SurveyProgramController extends Controller
             'active' => 1,
             'accepted' => 1,
         ]);
+
+        $categories = [
+            'Macroinvertebrate',
+            'Substrate',
+            'Algae',
+            'Fish',
+            'Litter',
+            'Other'
+        ];
+
+        foreach ($categories as $category) {
+            TaxaCategory::create([
+                'name' => $category,
+                'survey_program_id' => $surveyProgram->id,
+            ]);
+        }
 
         $surveyProgramUser->permissions()->attach(Permission::all()->pluck('id')->toArray());
 
@@ -267,6 +284,4 @@ class SurveyProgramController extends Controller
 
         return response()->json(["message" => 'SurveyProgram is private', 'permissions' => $permissions], 200);
     }
-
-
 }
