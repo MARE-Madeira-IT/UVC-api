@@ -40,3 +40,4 @@ jobs:
         ssh-port: ${{ secrets.PORT }}
         private-ssh-key: ${{ secrets.SSHKEY }}
         destination-path: /var/www/uvc-api-temp/htdocs/UVC-api
+        rsync-options: --archive --verbose --compress --human-readable --progress --delete-after --exclude=.git* --exclude=.git/ --exclude=README.md --exclude=readme.md --exclude=.gitignore --exclude=.env
