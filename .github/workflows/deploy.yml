@@ -10,7 +10,7 @@ jobs:
     steps:
     - name: Get the latest code
       uses: actions/checkout@v2.3.2
-    # - uses: actions/setup-node@master
+    # - uses: actions/setup-node@master #only use for frontend
     #   with:
     #     node-version: 20
     - name: Setup PHP
@@ -26,9 +26,9 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-php-
 
-    # - name: Installing project dependencies
+    # - name: Installing project dependencies #only use for frontend
     #   run: npm install
-    # - name: Building the project
+    # - name: Building the project #only use for frontend
     #   run: npm run build
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress
@@ -39,5 +39,5 @@ jobs:
         remote-user: ${{ secrets.USERNAME }}
         ssh-port: ${{ secrets.PORT }}
         private-ssh-key: ${{ secrets.SSHKEY }}
-        destination-path: /var/www/uvc-api-temp/htdocs/UVC-api
-        rsync-options: --archive --verbose --compress --human-readable --progress --delete-after --exclude=.git* --exclude=.git/ --exclude=README.md --exclude=readme.md --exclude=.gitignore --exclude=.env
+        destination-path: /var/www/uvc/htdoc/UVC-api
+        rsync-options: --archive --verbose --compress --human-readable --progress --delete-after --exclude=.git* --exclude=.git/ --exclude=README.md --exclude=readme.md --exclude=.gitignore --exclude=.env --exclude=worker.log --exclude=storage/logs/*
