@@ -40,4 +40,4 @@ jobs:
         ssh-port: ${{ secrets.PORT }}
         private-ssh-key: ${{ secrets.SSHKEY }}
         destination-path: /var/www/uvc/htdoc/UVC-api
-        rsync-options: -avzhogp --progress --delete-after --exclude=.git* --exclude=.git/ --exclude=README.md --exclude=readme.md --exclude=.gitignore --exclude=.env --exclude=worker.log --exclude=storage/*
+        rsync-options: -avzhp --chown=ruben.freitas:www-data --progress --delete-after --exclude=.git* --exclude=.git/ --exclude=README.md --exclude=readme.md --exclude=.gitignore --exclude=.env --exclude=worker.log --exclude=storage/*
