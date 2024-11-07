@@ -32,6 +32,11 @@ jobs:
     #   run: npm run build
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress
+    - name: Setup permissions
+      run: |
+        find . -type f -exec chmod 664 {} \;
+        find . -type d -exec chmod 775 {} \;
+        chmod -R ug+rwx storage bootstrap/cache
     - name: 📂 Sync files
       uses: SamKirkland/web-deploy@v1
       with:
