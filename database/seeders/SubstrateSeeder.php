@@ -15,13 +15,11 @@ class SubstrateSeeder extends Seeder
     {
         $substrates = [
             ['name' => 'block'],
-            ['name' => 'rubble'],
+            ['name' => 'pebble'],
             ['name' => 'boulder'],
             ['name' => 'platform'],
-            ['name' => 'pavement'],
             ['name' => 'sand'],
             ['name' => 'gravel'],
-            ['name' => 'rumble'],
         ];
 
         foreach ($substrates as $substrate) {
