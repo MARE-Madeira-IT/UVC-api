@@ -40,7 +40,7 @@ class MotileImport implements ToCollection, WithValidation, WithHeadingRow, Skip
             'sample' => ["required", Rule::exists("reports", "code")->where(function ($q) {
                 return $q->where('survey_program_id', $this->surveyProgram->id);
             })],
-            'survey_type' => "required|string|in:fish,macroinvertebrates,cryptic,dom_urchin",
+            'survey_type' => "required|string|in:fish,macroinvertebrates,cryptic,dom_urchin,litter",
             'taxa' => ["required", Rule::exists("taxas", "name")->where(function ($q) {
                 return $q->where('survey_program_id', $this->surveyProgram->id);
             })],
@@ -56,7 +56,7 @@ class MotileImport implements ToCollection, WithValidation, WithHeadingRow, Skip
         return [
             "sample.exists" => $this->sheetName . " (:row): The :attribute with value ':input' doesn't exist on the 'DIVE_SITE_METADATA' sheet",
             "sample.required" => $this->sheetName . " (:row): The :attribute is required",
-            "survey_type.*" => $this->sheetName . " (:row): The :attribute with value ':input' must be one of the following: fish, macroinvertebrates, cryptic, dom_urchin",
+            "survey_type.*" => $this->sheetName . " (:row): The :attribute with value ':input' must be one of the following: fish, macroinvertebrates, cryptic, dom_urchin, litter",
             "taxa.exists" => $this->sheetName . " (:row): The :attribute with value ':input' doesn't exist on the 'MOTILE_TAXAS' sheet",
             "taxa.required" => $this->sheetName . " (:row): The :attribute is required",
             "size_category.exists" => $this->sheetName . " (:row): The :attribute with value ':input' must be one of the following: " . implode(', ', SizeCategory::all()->pluck("name")->toArray()),
