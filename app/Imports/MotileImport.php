@@ -65,6 +65,7 @@ class MotileImport implements ToCollection, WithValidation, WithHeadingRow, Skip
             "surveyed_area.*" => $this->sheetName . " (:row): The :attribute with value ':input' must be one of the following: 100 or 200",
         ];
     }
+    
 
     public function isEmptyWhen(array $row): bool
     {
