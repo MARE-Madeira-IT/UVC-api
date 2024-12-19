@@ -84,8 +84,8 @@ class MotileDBSheet implements FromCollection, WithTitle, WithMapping, WithHeadi
       'density/1' => $motile["density/1"],
       'a' => $motile->taxa->indicators()->where('indicators.name', 'a')->first()?->pivot?->name,
       'b' => $motile->taxa->indicators()->where('indicators.name', 'b')->first()?->pivot?->name,
-      'gr/100' => $motile["biomass/1"] / 100,
-      'gr/1' => $motile["density/1"],
+      'gr/100' => $motile["biomass/1"] ? $motile["biomass/1"] / 100 : "",
+      'gr/1' => $motile["biomass/1"] ? $motile["biomass/1"] : "",
       'NOTAS' => $motile->notes,
     ];
   }
