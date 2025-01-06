@@ -27,7 +27,6 @@ class CleanExpiredCache extends Command
     public function handle()
     {
         DB::table('cache')->where('expiration', '<', strtotime(now()))->delete();
-        logger("Cleaned cache");
         return 0;
     }
 }

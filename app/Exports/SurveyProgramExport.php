@@ -50,9 +50,6 @@ class SurveyProgramExport implements WithMultipleSheets, ShouldQueue, WithEvents
 
   public function failed(Throwable $exception): void
   {
-    logger($exception->getMessage());
-    logger($exception->getFile() . ':' . $exception->getLine());
-
     $this->export->update([
       'state' => 'failed'
     ]);
