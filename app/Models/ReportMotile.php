@@ -28,6 +28,6 @@ class ReportMotile extends Model
 
     public function surveyProgram()
     {
-        return $this->report->surveyProgram;
+        return $this->report->surveyProgram();
     }
 }
