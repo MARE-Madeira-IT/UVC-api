@@ -63,9 +63,9 @@ class BenthicController extends Controller
      * @param  \App\Benthic  $mareBenthic
      * @return \Illuminate\Http\Response
      */
-    public function show(Benthic $benthic)
+    public function show(Report $report)
     {
-        return new BenthicResource($benthic);
+        return new BenthicGroupedResource($report);
     }
 
     /**
@@ -75,7 +75,7 @@ class BenthicController extends Controller
      * @param  \App\Benthic  $mareBenthic
      * @return \Illuminate\Http\Response
      */
-    public function update(BenthicRequest $request)
+    public function update(BenthicRequest $request, Report $report)
     {
 
         $validator = $request->validated();
@@ -101,14 +101,10 @@ class BenthicController extends Controller
      * @param  \App\Benthic  $mareBenthic
      * @return \Illuminate\Http\Response
      */
-    public function destroy($benthic)
+    public function destroy(Report $report)
     {
-        $benthics = Benthic::where('report_id', $benthic);
         DB::beginTransaction();
-        foreach ($benthics as $cBenthic) {
-            $cBenthic->delete();
-        }
-
+        $report->benthics()->delete();
         DB::commit();
         return response()->json(null, 204);
     }

@@ -134,4 +134,9 @@ class AuthController extends Controller
             return response()->json(['success' => false, 'error' => 'Failed to logout, please try again.'], 500);
         }
     }
+
+    public function me()
+    {
+        return Auth::user();
+    }
 }
