@@ -70,7 +70,7 @@ class MotileDBSheet implements FromCollection, WithTitle, WithMapping, WithHeadi
   {
     return [
       '###' => ++$this->index,
-      'SAMPLE' => $motile->mareReportMotile->report->code,
+      'SAMPLE' => $motile->mareReportMotile->report->getCode(),
       'survey type' => $motile->mareReportMotile->type,
       'taxa category' => $motile->taxa->category->name,
       'Genus' => $motile->taxa->genus,

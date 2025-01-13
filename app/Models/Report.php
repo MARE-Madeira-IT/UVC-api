@@ -12,7 +12,7 @@ class Report extends Model
 
 
     protected $fillable = [
-        "code",
+        "code", //It's only used on the import, else getCode() is used
         "date",
         "transect",
         "daily_dive",
@@ -67,5 +67,10 @@ class Report extends Model
     public function depth()
     {
         return $this->belongsTo(Depth::class);
+    }
+
+    public function getCode()
+    {
+        return $this->site->locality->code . "_" . $this->site->code . "_Time" . $this->time . "_D" . $this->depth->code . "_R" . $this->replica;
     }
 }

@@ -23,7 +23,7 @@ class BenthicResource extends JsonResource
             'substrate' => $this->substrate,
             'taxa' => new TaxaResource($this->taxa),
             'notes' => $this->notes,
-            'code' => $this->report->code,
+            'code' => $this->report->getCode(),
         ];
     }
 }

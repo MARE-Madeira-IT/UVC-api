@@ -43,7 +43,7 @@ class ReportController extends Controller
         $newEntry = Report::create([
             "survey_program_id" => $validator["survey_program_id"],
             "time" => $validator["time"],
-            "code" => $validator["code"],
+            // "code" => $validator["code"],
             "date" => Carbon::parse($validator["date"]),
             "transect" => $validator["transect"],
             "daily_dive" => $validator["daily_dive"],

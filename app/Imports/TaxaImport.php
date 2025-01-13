@@ -70,7 +70,7 @@ class TaxaImport implements ToCollection, WithValidation, WithHeadingRow, SkipsE
 
         $columnNames = array_key_exists(0, $rows->toArray()) ? array_keys($rows[0]->toArray()) : [];
 
-        $indicatorsStart = ImportHelper::findColNumber($columnNames, 'indicators') + 1;  //external
+        $indicatorsStart = ImportHelper::findColNumber($columnNames, 'indicators');  //external
         $indicators = array_filter(array_slice($columnNames, $indicatorsStart), function ($el) {
             return is_string($el);
         });

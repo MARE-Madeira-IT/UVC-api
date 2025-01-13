@@ -33,12 +33,18 @@ class ReportRequest extends FormRequest
     public function rules()
     {
         return [
-            'site_id' => 'required|exists:sites,id',
+            'site_id' => ['required', 'exists:sites,id', Rule::unique("reports", "site_id")
+                ->where(function ($query) {
+                    $query->where('survey_program_id', $this->survey_program_id)
+                        ->where("time", $this->time)
+                        ->where("depth_id", $this->depth_id)
+                        ->where("replica", $this->replica);
+                })->ignore($this?->report?->id)],
             'depth_id' => 'integer|exists:depths,id',
             'survey_program_id' => 'integer|exists:survey_programs,id',
-            'code' => ['required', 'string', Rule::unique('reports', 'code')->where(function ($query) {
-                $query->where('survey_program_id', $this->survey_program_id);
-            })->ignore($this?->report?->id)],
+            // 'code' => ['required', 'string', Rule::unique('reports', 'code')->where(function ($query) {
+            //     $query->where('survey_program_id', $this->survey_program_id);
+            // })->ignore($this?->report?->id)],
             'date' => 'required|date',
             'transect' => 'required|integer',
             'replica' => 'required|integer',
@@ -66,6 +72,7 @@ class ReportRequest extends FormRequest
         return [
             'latitude.regex' => 'The latitude format is invalid. Latitude range from -90 to 90',
             'longitude.regex' => 'The longitude format is invalid. Longitude range from -180 to 80',
+            'site_id.unique' => "The 'code' must be unique",
         ];
     }
 

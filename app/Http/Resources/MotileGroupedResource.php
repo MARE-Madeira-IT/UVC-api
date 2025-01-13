@@ -17,7 +17,7 @@ class MotileGroupedResource extends JsonResource
         return [
             'id' => $this->id,
             'report_id' => $this->report_id,
-            'code' => $this->report["code"],
+            'code' => $this->report->getCode(),
             'type' => $this->type,
             'children' => MotileResource::collection($this->motiles),
         ];
