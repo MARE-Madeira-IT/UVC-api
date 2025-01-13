@@ -111,7 +111,7 @@ class DiveMetadataImport implements ToCollection, WithValidation, WithHeadingRow
 
         $columnNames = array_key_exists(0, $rows->toArray()) ? array_keys($rows[0]->toArray()) : [];
 
-        $functionsStart = ImportHelper::findColNumber($columnNames, 'functions') + 1;  //external
+        $functionsStart = ImportHelper::findColNumber($columnNames, 'functions');  //external
         $functions = array_filter(array_slice($columnNames, $functionsStart), function ($el) {
             return is_string($el);
         });

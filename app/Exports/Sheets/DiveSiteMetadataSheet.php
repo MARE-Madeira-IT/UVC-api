@@ -25,7 +25,7 @@ class DiveSiteMetadataSheet implements FromCollection, WithTitle, WithMapping, W
   public function collection()
   {
     $filters = ReportFilters::hydrate($this->request);
-
+ 
     return $this->surveyProgram->reports()->filterBy($filters)->orderBy('date', 'asc')->get();
   }
 
@@ -77,7 +77,7 @@ class DiveSiteMetadataSheet implements FromCollection, WithTitle, WithMapping, W
 
     return [
       "###" => ++$this->index,
-      "SAMPLE#" => $report->code,
+      "SAMPLE#" => $report->getCode(),
       'date' => Carbon::parse($report->date)->format('Ymd'),
       'Locality' => $report->site->locality->name,
       'Locality Code' => $report->site->locality->code,
@@ -89,7 +89,7 @@ class DiveSiteMetadataSheet implements FromCollection, WithTitle, WithMapping, W
       'Depth#' => $report->depth->code,
       'Time#' => $report->time,
       'Replica' => $report->replica,
-      'sample' => $report->code,
+      'sample' => $report->getCode(),
       'Site_Depth' => $report->site->locality->code . "_" . $report->site->code . "_T" . $report->time . "_D" . $report->depth->code,
       'Latitude' => $report->latitude,
       'Longitude' => $report->longitude,

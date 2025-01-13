@@ -27,6 +27,7 @@ class SurveyProgramExportJob implements ShouldQueue
      */
     public function handle(): void
     {
+        logger($this->requestArr);
         (new SurveyProgramExport($this->newEntry, $this->requestArr))->queue($this->filename, 'local', \Maatwebsite\Excel\Excel::XLSX)
             ->chain([
                 new SurveyProgramExportCompletedJob($this->newEntry, $this->filename)

@@ -57,7 +57,7 @@ class BenthicDBSheet implements FromCollection, WithTitle, WithMapping, WithHead
   {
     return [
       '###' => ++$this->index,
-      'SAMPLE#' => $benthic->report->code,
+      'SAMPLE#' => $benthic->report->getCode(),
       'P##' => $benthic["p##"],
       'TAXA CAT' => $benthic->taxa->category->name,
       'SUBSTRATE' => $benthic->substrate->name,

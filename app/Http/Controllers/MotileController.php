@@ -38,7 +38,7 @@ class MotileController extends Controller
         $validator = $request->validated();
         DB::beginTransaction();
 
-        $mareReportMotile = ReportMotile::updateOrCreate([
+        $reportMotile = ReportMotile::updateOrCreate([
             "report_id" => $validator["report_id"],
             "type" => $validator["type"]
         ], [
@@ -67,12 +67,12 @@ class MotileController extends Controller
                 $biomass = $aValue * pow((float) $motile["size"], $bValue);
             }
 
-            if (isset($motile["ntotal"]) && isset($mareReportMotile->report->surveyed_area)) {
-                $density = (float) $motile["ntotal"] / $mareReportMotile->report->surveyed_area;
+            if (isset($motile["ntotal"]) && isset($reportMotile->report->surveyed_area)) {
+                $density = (float) $motile["ntotal"] / $reportMotile->report->surveyed_area;
             }
 
             Motile::create([
-                "report_motile_id" => $mareReportMotile->id,
+                "report_motile_id" => $reportMotile->id,
                 "taxa_id" => $motile["taxa_id"],
                 "size_category_id" => $motile["size_category_id"] ?? null,
                 "size" => $motile["size"] ?? null,
@@ -85,7 +85,7 @@ class MotileController extends Controller
 
         DB::commit();
 
-        return new MotileGroupedResource($mareReportMotile);
+        return new MotileGroupedResource($reportMotile);
     }
 
     /**
@@ -94,9 +94,9 @@ class MotileController extends Controller
      * @param  \App\Motile  $mareMotile
      * @return \Illuminate\Http\Response
      */
-    public function show(ReportMotile $mareReportMotileId)
+    public function show(ReportMotile $reportMotile)
     {
-        return new MotileGroupedResource($mareReportMotileId);
+        return new MotileGroupedResource($reportMotile);
     }
 
     /**
@@ -106,14 +106,12 @@ class MotileController extends Controller
      * @param  \App\Motile  $mareMotile
      * @return \Illuminate\Http\Response
      */
-    public function update(MotileRequest $request, $mareReportMotileId)
+    public function update(MotileRequest $request, ReportMotile $reportMotile)
     {
         $validator = $request->validated();
         DB::beginTransaction();
 
-        $mareReportMotile = ReportMotile::findOrFail($mareReportMotileId);
-
-        $mareReportMotile->motiles()->delete();
+        $reportMotile->motiles()->delete();
 
         foreach ($validator["motiles"] as $motile) {
             // $density =
@@ -136,12 +134,12 @@ class MotileController extends Controller
                 $biomass = $aValue * pow((float) $motile["size"], $bValue);
             }
 
-            if (isset($motile["ntotal"]) && isset($mareReportMotile->report->surveyed_area)) {
-                $density = (float) $motile["ntotal"] / $mareReportMotile->report->surveyed_area;
+            if (isset($motile["ntotal"]) && isset($reportMotile->report->surveyed_area)) {
+                $density = (float) $motile["ntotal"] / $reportMotile->report->surveyed_area;
             }
 
             Motile::create([
-                "report_motile_id" => $mareReportMotile->id,
+                "report_motile_id" => $reportMotile->id,
                 "taxa_id" => $motile["taxa_id"],
                 "size_category_id" => $motile["size_category_id"] ?? null,
                 "size" => $motile["size"] ?? null,
@@ -155,7 +153,7 @@ class MotileController extends Controller
 
         DB::commit();
 
-        return new MotileGroupedResource($mareReportMotile);
+        return new MotileGroupedResource($reportMotile);
     }
 
     /**
@@ -164,12 +162,12 @@ class MotileController extends Controller
      * @param  \App\Motile  $mareMotile
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ReportMotile $mareReportMotileId)
+    public function destroy(ReportMotile $reportMotile)
     {
         DB::beginTransaction();
 
-        $mareReportMotileId->motiles()->delete();
-        $mareReportMotileId->delete();
+        $reportMotile->motiles()->delete();
+        $reportMotile->delete();
         DB::commit();
         return response()->json(null, 204);
     }

@@ -12,7 +12,6 @@ class TaxaCategoryFilters extends QueryFilters
 {
     public function surveyProgram($id)
     {
-        logger($id);
         $this->query->where('survey_program_id', $id);
     }
 

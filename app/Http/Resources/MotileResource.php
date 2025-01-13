@@ -24,7 +24,7 @@ class MotileResource extends JsonResource
             'report' => $this->report,
             'sizeCategory' => $this->sizeCategory,
             'taxa' => new TaxaResource($this->taxa),
-            'code' => $this->mareReportMotile->report["code"],
+            'code' => $this->mareReportMotile->report->getCode(),
             'type' => $this->mareReportMotile->type,
         ];
     }

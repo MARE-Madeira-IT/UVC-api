@@ -62,7 +62,6 @@ class SurveyProgramImport implements WithMultipleSheets, WithEvents, ShouldQueue
             },
             ImportFailed::class => function (ImportFailed $event) {
                 $this->surveyProgram->delete();
-                logger("import failed");
                 cache()->forget("total_rows_DIVE_SITE_METADATA_{$this->surveyProgram->id}");
                 cache()->forget("total_rows_BENTHIC_TAXAS_{$this->surveyProgram->id}");
                 cache()->forget("total_rows_MOTILE_TAXAS_{$this->surveyProgram->id}");
@@ -84,7 +83,6 @@ class SurveyProgramImport implements WithMultipleSheets, WithEvents, ShouldQueue
                     cache(["errors_DIVE_SITE_METADATA_{$this->surveyProgram->id}" => $errors], now()->addMinutes(60));
                 } else {
                     $exception = $event->getException();
-                    logger($exception);
                     cache(["errors_DIVE_SITE_METADATA_{$this->surveyProgram->id}" => [$exception->getMessage() . " on " . $exception->getFile() . ':' . $exception->getLine()]], now()->addMinutes(60));
                 }
             },

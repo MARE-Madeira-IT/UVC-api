@@ -16,7 +16,7 @@ class BenthicGroupedResource extends JsonResource
     {
         return [
             'report_id' => $this->id,
-            'code' => $this->code,
+            'code' => $this->getCode(),
             'children' => BenthicResource::collection($this->benthics),
         ];
     }

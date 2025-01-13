@@ -37,7 +37,7 @@ class ReportObserver
         $this->deleteExports($report);
 
         $report->update([
-            'code' => time() . '|' . $report->code
+            'code' => time() . '|' . $report->getCode()
         ]);
     }
 }

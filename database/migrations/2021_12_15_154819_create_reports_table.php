@@ -15,7 +15,7 @@ class CreateReportsTable extends Migration
     {
         Schema::create('reports', function (Blueprint $table) {
             $table->id();
-            $table->string('code');
+            $table->string('code')->nullable(); //its only used for import now
             $table->date('date');
             $table->integer('transect');
             $table->integer('daily_dive');
@@ -36,7 +36,7 @@ class CreateReportsTable extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->unique(["survey_program_id", "code"]);
+            $table->unique(["survey_program_id", "site_id", "time", "depth_id", "replica"]); //Code unique
             $table->foreign('survey_program_id')->references('id')->on('survey_programs')->onDelete('cascade');
             $table->foreign('site_id')->references('id')->on('sites')->onDelete('cascade');
             $table->foreign('depth_id')->references('id')->on('depths')->onDelete('cascade');

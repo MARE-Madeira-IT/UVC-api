@@ -17,7 +17,7 @@ class ReportResource extends JsonResource
         return [
             'id' => $this->id,
             'date' => $this->date,
-            'code' => $this->code,
+            'code' => $this->getCode(),
             'site' => $this->site,
             'transect' => $this->transect,
             'time' => $this->time,
