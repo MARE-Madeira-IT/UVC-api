@@ -9,6 +9,8 @@ use App\Http\Requests\SurveyProgramRequest;
 use App\Http\Resources\SurveyProgramResource;
 use App\Imports\SurveyProgramImport;
 use App\Models\Permission;
+use App\Models\Project;
+use App\Models\ProjectUser;
 use App\Models\SurveyProgram;
 use App\Models\SurveyProgramUser;
 use App\Models\TaxaCategory;
@@ -94,6 +96,24 @@ class SurveyProgramController extends Controller
             cache()->forever("start_date_{$surveyProgram->id}", now());
             Excel::queueImport(new SurveyProgramImport($surveyProgram), $request->file("file"), null, \Maatwebsite\Excel\Excel::XLSX);
         }
+
+        $projectAdmins = ProjectUser::where("project_id", $validator["project_id"])->whereHas("permissions", function ($q) {
+            $q->where("name", "admin");
+        })->get();
+
+        foreach ($projectAdmins as $projectAdmin) {
+            $surveyProgramUser = SurveyProgramUser::updateOrCreate([
+                'survey_program_id' => $surveyProgram->id,
+                'user_id' => $projectAdmin->user_id,
+            ], [
+                'survey_program_id' => $surveyProgram->id,
+                'user_id' => $projectAdmin->user_id,
+                'active' => 1,
+                'accepted' => 1,
+            ]);
+            $surveyProgramUser->permissions()->sync(Permission::all()->pluck('id')->toArray());
+        }
+
         DB::commit();
         return new SurveyProgramResource($surveyProgram);
     }
