@@ -54,6 +54,15 @@ class ProjectController extends Controller
 
         $projectUser->permissions()->attach(Permission::all()->pluck('id')->toArray());
 
+        $waveAdminUser = ProjectUser::create([
+            'project_id' => $project->id,
+            'user_id' => User::where("email", "admin@admin.wave")->first()->id,
+            'active' => 1,
+            'accepted' => 1,
+        ]);
+
+        $waveAdminUser->permissions()->attach(Permission::all()->pluck('id')->toArray());
+
         return new ProjectResource($project);
     }
 
